@@ -11,6 +11,7 @@ export default defineConfig({
       client: "fetch",
       mode: "split",
       clean: true,
+      baseUrl: "https://localhost:7229",
     },
   },
 });
