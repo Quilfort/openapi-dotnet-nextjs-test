@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { getApiAgendas } from "@/generated/api";
+import AgendaCard from "@/app/components/AgendaCard";
+import PageHeader from "@/app/components/PageHeader";
 
 export default async function AgendasPage() {
   const response = await getApiAgendas();
@@ -24,20 +26,11 @@ export default async function AgendasPage() {
 
         {/* Page header */}
         <section className="py-16 lg:py-20">
-          <div className="max-w-3xl">
-            <p className="mb-3 text-sm font-medium text-muted">
-              Resource
-            </p>
-
-            <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-              Agendas
-            </h1>
-
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-muted">
-              Een overzicht van alle agenda&apos;s die beschikbaar zijn
-              via de API.
-            </p>
-          </div>
+          <PageHeader
+            eyebrow="Resource"
+            title="Agendas"
+            description="Een overzicht van alle agenda's die beschikbaar zijn via de API."
+          />
         </section>
 
         {/* Agenda overview */}
@@ -45,42 +38,20 @@ export default async function AgendasPage() {
           {agendas.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-border bg-surface p-10 text-center">
               <h2 className="text-lg font-semibold text-foreground">
-                Geen agenda&apos;s gevonden
+                Geen agenda's gevonden
               </h2>
 
               <p className="mt-2 text-sm text-muted">
-                Er zijn momenteel geen agenda&apos;s beschikbaar.
+                Er zijn momenteel geen agenda's beschikbaar.
               </p>
             </div>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2">
               {agendas.map((agenda) => (
-                <article
+                <AgendaCard
                   key={agenda.id}
-                  className="group rounded-2xl border border-border bg-surface p-6 transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-lg dark:hover:border-slate-700"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-sm font-medium text-muted">
-                        Agenda
-                      </p>
-
-                      <h2 className="mt-1 text-xl font-semibold text-foreground">
-                        {agenda.name}
-                      </h2>
-                    </div>
-
-                    <span className="text-xl text-muted transition-transform group-hover:translate-x-1">
-                      →
-                    </span>
-                  </div>
-
-                  {agenda.description && (
-                    <p className="mt-4 text-sm leading-6 text-muted">
-                      {agenda.description}
-                    </p>
-                  )}
-                </article>
+                  agenda={agenda}
+                />
               ))}
             </div>
           )}
