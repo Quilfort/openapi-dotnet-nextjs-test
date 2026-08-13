@@ -13,6 +13,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Agenda> Agendas { get; set; }
 
+    public virtual DbSet<AgendaItem> AgendaItems { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>(entity =>
@@ -25,6 +27,16 @@ public partial class AppDbContext : DbContext
         modelBuilder.Entity<Agenda>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("agendas_pkey");
+        });
+
+        modelBuilder.Entity<AgendaItem>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("agenda_items_pkey");
+
+            entity.HasOne(e => e.Agenda)
+                .WithMany()
+                .HasForeignKey(e => e.AgendaId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         OnModelCreatingPartial(modelBuilder);
