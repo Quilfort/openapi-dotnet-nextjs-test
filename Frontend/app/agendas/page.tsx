@@ -1,15 +1,23 @@
 import Link from "next/link";
+
 import { getApiAgendas } from "@/generated/api";
 import AgendaCard from "@/app/components/AgendaCard";
+import CreateButton from "@/app/components/CreateButton";
 import PageHeader from "@/app/components/PageHeader";
 
 export default async function AgendasPage() {
   const response = await getApiAgendas();
   const agendas = response.data;
 
+  const sortedAgendas = [...agendas].sort((a, b) =>
+    (a.name ?? "").localeCompare(b.name ?? "", "nl", {
+      sensitivity: "base",
+    }),
+  );
+
   return (
     <main className="min-h-screen">
-      <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-6 py-8 sm:px-8 lg:px-12">
+      <div className="mx-auto max-w-6xl px-6 py-8 sm:px-8 lg:px-12">
         {/* Header */}
         <header className="flex items-center justify-between border-b border-border pb-6">
           <Link
@@ -19,24 +27,30 @@ export default async function AgendasPage() {
             Agenda Management
           </Link>
 
-          <span className="rounded-full border border-border bg-surface px-3 py-1 text-xs font-medium text-muted">
-            API Demo
-          </span>
+          <Link
+            href="/"
+            className="text-sm font-medium text-muted transition-colors hover:text-foreground"
+          >
+            ← Home
+          </Link>
         </header>
 
-        {/* Page header */}
-        <section className="py-16 lg:py-20">
-          <PageHeader
-            eyebrow="Resource"
-            title="Agendas"
-            description="Een overzicht van alle agenda's die beschikbaar zijn via de API."
-          />
-        </section>
+        {/* Content */}
+        <section className="py-16">
+          <div className="flex items-start justify-between gap-6">
+            <PageHeader
+              eyebrow="Resource"
+              title="Agendas"
+              description="Een overzicht van alle beschikbare agenda's."
+            />
 
-        {/* Agenda overview */}
-        <section className="flex-1 pb-16">
-          {agendas.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-border bg-surface p-10 text-center">
+            <CreateButton href="/agendas/new">
+              Nieuwe agenda
+            </CreateButton>
+          </div>
+
+          {sortedAgendas.length === 0 ? (
+            <div className="mt-12 rounded-2xl border border-dashed border-border bg-surface p-10 text-center">
               <h2 className="text-lg font-semibold text-foreground">
                 Geen agenda's gevonden
               </h2>
@@ -44,10 +58,16 @@ export default async function AgendasPage() {
               <p className="mt-2 text-sm text-muted">
                 Er zijn momenteel geen agenda's beschikbaar.
               </p>
+
+              <div className="mt-6">
+                <CreateButton href="/agendas/new">
+                  Eerste agenda maken
+                </CreateButton>
+              </div>
             </div>
           ) : (
-            <div className="grid gap-4 sm:grid-cols-2">
-              {agendas.map((agenda) => (
+            <div className="mt-12 grid gap-4 sm:grid-cols-2">
+              {sortedAgendas.map((agenda) => (
                 <AgendaCard
                   key={agenda.id}
                   agenda={agenda}
@@ -56,11 +76,6 @@ export default async function AgendasPage() {
             </div>
           )}
         </section>
-
-        {/* Footer */}
-        <footer className="border-t border-border py-6 text-sm text-muted">
-          OpenAPI → Generated client → Next.js
-        </footer>
       </div>
     </main>
   );

@@ -6,7 +6,8 @@
  */
 import type {
   Agenda,
-  AgendaItem
+  AgendaItem,
+  ProblemDetails
 } from './models';
 
 
@@ -60,27 +61,44 @@ export const getApiAgendas = async ( options?: RequestInit): Promise<getApiAgend
 
 
 
-export type postApiAgendasResponse200TextPlain = {
+export type postApiAgendasResponse201TextPlain = {
   data: Agenda
-  status: 200
+  status: 201
 }
 
-export type postApiAgendasResponse200ApplicationJson = {
+export type postApiAgendasResponse201ApplicationJson = {
   data: Agenda
-  status: 200
+  status: 201
 }
 
-export type postApiAgendasResponse200TextJson = {
+export type postApiAgendasResponse201TextJson = {
   data: Agenda
-  status: 200
+  status: 201
 }
 
-export type postApiAgendasResponseSuccess = (postApiAgendasResponse200TextPlain | postApiAgendasResponse200ApplicationJson | postApiAgendasResponse200TextJson) & {
+export type postApiAgendasResponse400TextPlain = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type postApiAgendasResponse400ApplicationJson = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type postApiAgendasResponse400TextJson = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type postApiAgendasResponseSuccess = (postApiAgendasResponse201TextPlain | postApiAgendasResponse201ApplicationJson | postApiAgendasResponse201TextJson) & {
   headers: Headers;
 };
-;
+export type postApiAgendasResponseError = (postApiAgendasResponse400TextPlain | postApiAgendasResponse400ApplicationJson | postApiAgendasResponse400TextJson) & {
+  headers: Headers;
+};
 
-export type postApiAgendasResponse = (postApiAgendasResponseSuccess)
+export type postApiAgendasResponse = (postApiAgendasResponseSuccess | postApiAgendasResponseError)
 
 export const getPostApiAgendasUrl = () => {
 
@@ -125,12 +143,29 @@ export type getApiAgendasIdResponse200TextJson = {
   status: 200
 }
 
+export type getApiAgendasIdResponse404TextPlain = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type getApiAgendasIdResponse404ApplicationJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type getApiAgendasIdResponse404TextJson = {
+  data: ProblemDetails
+  status: 404
+}
+
 export type getApiAgendasIdResponseSuccess = (getApiAgendasIdResponse200TextPlain | getApiAgendasIdResponse200ApplicationJson | getApiAgendasIdResponse200TextJson) & {
   headers: Headers;
 };
-;
+export type getApiAgendasIdResponseError = (getApiAgendasIdResponse404TextPlain | getApiAgendasIdResponse404ApplicationJson | getApiAgendasIdResponse404TextJson) & {
+  headers: Headers;
+};
 
-export type getApiAgendasIdResponse = (getApiAgendasIdResponseSuccess)
+export type getApiAgendasIdResponse = (getApiAgendasIdResponseSuccess | getApiAgendasIdResponseError)
 
 export const getGetApiAgendasIdUrl = (id: string,) => {
 
@@ -160,17 +195,49 @@ export const getApiAgendasId = async (id: string, options?: RequestInit): Promis
 
 
 
-export type putApiAgendasIdResponse200 = {
+export type putApiAgendasIdResponse204 = {
   data: void
-  status: 200
+  status: 204
 }
 
-export type putApiAgendasIdResponseSuccess = (putApiAgendasIdResponse200) & {
+export type putApiAgendasIdResponse400TextPlain = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type putApiAgendasIdResponse400ApplicationJson = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type putApiAgendasIdResponse400TextJson = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type putApiAgendasIdResponse404TextPlain = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type putApiAgendasIdResponse404ApplicationJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type putApiAgendasIdResponse404TextJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type putApiAgendasIdResponseSuccess = (putApiAgendasIdResponse204) & {
   headers: Headers;
 };
-;
+export type putApiAgendasIdResponseError = (putApiAgendasIdResponse400TextPlain | putApiAgendasIdResponse400ApplicationJson | putApiAgendasIdResponse400TextJson | putApiAgendasIdResponse404TextPlain | putApiAgendasIdResponse404ApplicationJson | putApiAgendasIdResponse404TextJson) & {
+  headers: Headers;
+};
 
-export type putApiAgendasIdResponse = (putApiAgendasIdResponseSuccess)
+export type putApiAgendasIdResponse = (putApiAgendasIdResponseSuccess | putApiAgendasIdResponseError)
 
 export const getPutApiAgendasIdUrl = (id: string,) => {
 
@@ -192,26 +259,43 @@ export const putApiAgendasId = async (id: string,
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: putApiAgendasIdResponse['data'] = body ? JSON.parse(body) : undefined
+  const data: putApiAgendasIdResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : undefined
   return { data, status: res.status, headers: res.headers } as putApiAgendasIdResponse
 }
 
 
 
-export type deleteApiAgendasIdResponse200 = {
+export type deleteApiAgendasIdResponse204 = {
   data: void
-  status: 200
+  status: 204
 }
 
-export type deleteApiAgendasIdResponseSuccess = (deleteApiAgendasIdResponse200) & {
+export type deleteApiAgendasIdResponse404TextPlain = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type deleteApiAgendasIdResponse404ApplicationJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type deleteApiAgendasIdResponse404TextJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type deleteApiAgendasIdResponseSuccess = (deleteApiAgendasIdResponse204) & {
   headers: Headers;
 };
-;
+export type deleteApiAgendasIdResponseError = (deleteApiAgendasIdResponse404TextPlain | deleteApiAgendasIdResponse404ApplicationJson | deleteApiAgendasIdResponse404TextJson) & {
+  headers: Headers;
+};
 
-export type deleteApiAgendasIdResponse = (deleteApiAgendasIdResponseSuccess)
+export type deleteApiAgendasIdResponse = (deleteApiAgendasIdResponseSuccess | deleteApiAgendasIdResponseError)
 
 export const getDeleteApiAgendasIdUrl = (id: string,) => {
 
@@ -232,10 +316,10 @@ export const deleteApiAgendasId = async (id: string, options?: RequestInit): Pro
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: deleteApiAgendasIdResponse['data'] = body ? JSON.parse(body) : undefined
+  const data: deleteApiAgendasIdResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : undefined
   return { data, status: res.status, headers: res.headers } as deleteApiAgendasIdResponse
 }
 

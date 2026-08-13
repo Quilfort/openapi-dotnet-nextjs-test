@@ -7,3 +7,4 @@
 
 export * from './agenda';
 export * from './agendaItem';
+export * from './problemDetails';
