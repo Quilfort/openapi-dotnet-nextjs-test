@@ -42,7 +42,7 @@ export default function Home() {
           {/* Navigation cards */}
           <div className="mt-14 grid gap-4 sm:grid-cols-2">
             <Link
-              href="/agenda"
+              href="/agendas"
               className="group rounded-2xl border border-border bg-surface p-6 transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-lg dark:hover:border-slate-700"
             >
               <div className="flex items-start justify-between">
