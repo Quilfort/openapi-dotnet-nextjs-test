@@ -8,3 +8,11 @@ Zorg dat de volgende software lokaal is geïnstalleerd:
 ## Aan de slag
 
 Vul eerst de DefaultConnection string in de `appsettings.Development.json` bestand in. Deze string is nodig om verbinding te maken met de database.
+
+# API Documentation
+
+## Swagger
+https://localhost:7229/swagger/index.html
+
+## Scaler
+https://localhost:7229/scalar/
