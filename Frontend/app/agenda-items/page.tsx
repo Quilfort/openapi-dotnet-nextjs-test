@@ -2,6 +2,8 @@ import Link from "next/link";
 
 import { getApiAgendaItems } from "@/generated/api";
 
+import CreateButton from "@/app/components/CreateButton";
+
 function formatDateRange(
     startDate?: string,
     endDate?: string | null
@@ -102,6 +104,11 @@ export default async function AgendaItemsPage() {
                                 gesorteerd op datum.
                             </p>
                         </div>
+
+                        <CreateButton href="/agenda-items/new">
+                            Nieuw agenda item
+                        </CreateButton>
+
                     </div>
 
                     {agendaItems.length === 0 ? (
