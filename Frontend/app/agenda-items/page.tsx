@@ -1,9 +1,8 @@
-import Link from "next/link";
-
 import { getApiAgendaItems } from "@/generated/api";
 
 import CreateButton from "@/app/components/CreateButton";
 import AgendaItemList from "@/app/components/AgendaItemList";
+import PageHeader from "@/app/components/PageHeader";
 
 export default async function AgendaItemsPage() {
     const response = await getApiAgendaItems();
@@ -17,50 +16,42 @@ export default async function AgendaItemsPage() {
     const agendaItems = [...response.data];
 
     return (
-        <main className="min-h-screen">
-            <div className="mx-auto max-w-6xl px-6 py-8 sm:px-8 lg:px-12">
-                <header className="flex items-center justify-between border-b border-border pb-6">
-                    <Link
-                        href="/"
-                        className="text-lg font-semibold tracking-tight transition-opacity hover:opacity-70"
-                    >
-                        Agenda Management
-                    </Link>
-
-                    <Link
-                        href="/agendas"
-                        className="text-sm font-medium text-muted transition-colors hover:text-foreground"
-                    >
-                        ← Agendas
-                    </Link>
-                </header>
-
-                <section className="py-16">
-                    <div className="mb-10 flex items-end justify-between gap-6">
-                        <div>
-                            <p className="mb-3 text-sm font-medium text-muted">
-                                Planning
-                            </p>
-
-                            <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-                                Kalender
-                            </h1>
-
-                            <p className="mt-4 max-w-2xl text-lg leading-8 text-muted">
-                                Een overzicht van alle items uit de
-                                verschillende agenda&apos;s, gesorteerd op
-                                datum.
-                            </p>
-                        </div>
+        <main className="min-h-full">
+            <div className="mx-auto max-w-6xl px-6 py-10 sm:px-8 lg:px-12">
+                {/* Page header */}
+                <section>
+                    <div className="flex items-end justify-between gap-6">
+                        <PageHeader
+                            eyebrow="Planning"
+                            title="Kalender"
+                            description="Bekijk alle geplande items en ontdek wat er wanneer op de planning staat."
+                        />
 
                         <CreateButton href="/agenda-items/new">
                             Nieuw agenda item
                         </CreateButton>
                     </div>
+                </section>
 
-                    <AgendaItemList
-                        agendaItems={agendaItems}
-                    />
+                {/* Agenda items */}
+                <section className="mt-12">
+                    <div className="mb-5 flex items-center justify-between">
+                        <div>
+                            <h2 className="text-sm font-semibold text-foreground">
+                                Alle agenda items
+                            </h2>
+
+                            <p className="mt-1 text-sm text-muted">
+                                {agendaItems.length}{" "}
+                                {agendaItems.length === 1
+                                    ? "item"
+                                    : "items"}{" "}
+                                gepland
+                            </p>
+                        </div>
+                    </div>
+
+                    <AgendaItemList agendaItems={agendaItems} />
                 </section>
             </div>
         </main>

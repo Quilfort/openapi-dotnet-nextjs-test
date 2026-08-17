@@ -1,37 +1,53 @@
 import Link from "next/link";
-import type { Agenda } from "@/generated/models";
 
 type AgendaCardProps = {
-  agenda: Agenda;
+  agenda: {
+    id?: string;
+    name?: string | null;
+    description?: string | null;
+  };
 };
 
-export default function AgendaCard({ agenda }: AgendaCardProps) {
+export default function AgendaCard({
+  agenda,
+}: AgendaCardProps) {
   return (
     <Link
       href={`/agendas/${agenda.id}`}
-      className="group block rounded-2xl border border-border bg-surface p-6 transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-lg dark:hover:border-slate-700"
+      className="group block px-6 py-5 transition-colors hover:bg-background focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-inset"
     >
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-sm font-medium text-muted">
-            Agenda
-          </p>
+      <div className="flex items-center justify-between gap-6">
+        <div className="min-w-0">
+          <div className="flex items-center gap-3">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-sm font-semibold text-accent">
+              {agenda.name?.charAt(0).toUpperCase() || "A"}
+            </span>
 
-          <h2 className="mt-1 text-xl font-semibold text-foreground">
-            {agenda.name}
-          </h2>
+            <div className="min-w-0">
+              <h3 className="truncate font-semibold text-foreground group-hover:text-accent">
+                {agenda.name || "Naamloze agenda"}
+              </h3>
+
+              <p className="mt-0.5 text-sm text-muted">
+                Agenda
+              </p>
+            </div>
+          </div>
+
+          {agenda.description && (
+            <p className="mt-4 line-clamp-1 max-w-2xl text-sm text-muted">
+              {agenda.description}
+            </p>
+          )}
         </div>
 
-        <span className="text-xl text-muted transition-transform group-hover:translate-x-1">
+        <span
+          aria-hidden="true"
+          className="shrink-0 text-lg text-muted transition-transform group-hover:translate-x-1 group-hover:text-accent"
+        >
           →
         </span>
       </div>
-
-      {agenda.description && (
-        <p className="mt-4 text-sm leading-6 text-muted">
-          {agenda.description}
-        </p>
-      )}
     </Link>
   );
 }
