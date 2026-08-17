@@ -6,10 +6,18 @@ import ConfirmModal from "./ConfirmModal";
 
 type DeleteButtonProps = {
     onDelete: () => void;
+    title?: string;
+    description?: string;
+    confirmLabel?: string;
+    cancelLabel?: string;
 };
 
 export default function DeleteButton({
     onDelete,
+    title = "Item verwijderen?",
+    description = "Weet je zeker dat je dit item wilt verwijderen? Deze actie kan niet ongedaan worden.",
+    confirmLabel = "Verwijderen",
+    cancelLabel = "Annuleren",
 }: DeleteButtonProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -34,10 +42,10 @@ export default function DeleteButton({
 
             <ConfirmModal
                 isOpen={isModalOpen}
-                title="Item verwijderen?"
-                description="Weet je zeker dat je dit item wilt verwijderen? Deze actie kan niet ongedaan worden."
-                confirmLabel="Verwijderen"
-                cancelLabel="Annuleren"
+                title={title}
+                description={description}
+                confirmLabel={confirmLabel}
+                cancelLabel={cancelLabel}
                 onConfirm={handleConfirm}
                 onCancel={handleCancel}
             />

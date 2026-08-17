@@ -45,6 +45,19 @@ export default async function AgendaPage({
     (agendaItem) => agendaItem.agendaId === id
   );
 
+  const hasAgendaItems = agendaItems.length > 0;
+
+  const deleteTitle = hasAgendaItems
+    ? "Agenda en agenda items verwijderen?"
+    : "Agenda verwijderen?";
+
+  const deleteDescription = hasAgendaItems
+    ? `Deze agenda heeft ${agendaItems.length} ${agendaItems.length === 1
+      ? "agenda item"
+      : "agenda items"
+    }. Als je deze agenda verwijdert, worden ook alle gekoppelde agenda items verwijderd. Deze actie kan niet ongedaan worden.`
+    : "Weet je zeker dat je deze agenda wilt verwijderen? Deze actie kan niet ongedaan worden.";
+
   async function deleteAgenda() {
     "use server";
 
@@ -57,6 +70,8 @@ export default async function AgendaPage({
     }
 
     revalidatePath("/agendas");
+    revalidatePath("/agenda-items");
+
     redirect("/agendas");
   }
 
@@ -101,6 +116,8 @@ export default async function AgendaPage({
 
               <DeleteButton
                 onDelete={deleteAgenda}
+                title={deleteTitle}
+                description={deleteDescription}
               />
             </div>
           </div>
