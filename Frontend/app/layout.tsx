@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+
 import "./globals.css";
+import Sidebar from "./layout/Sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,16 +16,27 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Agenda Management",
-  description: "A simple agenda management application built with .NET, PostgreSQL, OpenAPI, and Next.js",
+  description:
+    "A simple agenda management application built with .NET, PostgreSQL, OpenAPI, and Next.js",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
+      lang="nl"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full">
+        <div className="flex min-h-screen">
+          <Sidebar />
+
+          <main className="min-w-0 flex-1">
+            {children}
+          </main>
+        </div>
+      </body>
     </html>
   );
 }

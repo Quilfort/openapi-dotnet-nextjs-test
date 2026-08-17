@@ -90,7 +90,13 @@ export default async function AgendaItemPage({
             );
         }
 
+        revalidatePath("/");
         revalidatePath("/agenda-items");
+
+        if (agendaItem.agendaId) {
+            revalidatePath(`/agendas/${agendaItem.agendaId}`);
+        }
+
         redirect("/agenda-items");
     }
 
@@ -116,18 +122,19 @@ export default async function AgendaItemPage({
 
                 {/* Content */}
                 <section className="py-16">
-                    <div className="mb-12 flex max-w-3xl items-start justify-between gap-6">
-                        <div>
+                    {/* Agenda item header */}
+                    <div className="flex max-w-4xl items-start justify-between gap-8">
+                        <div className="min-w-0">
                             <p className="mb-3 text-sm font-medium text-muted">
                                 Agenda item
                             </p>
 
                             <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-                                {agendaItem.name}
+                                {agendaItem.name || "Naamloos agenda item"}
                             </h1>
 
                             {agendaItem.description && (
-                                <p className="mt-6 text-lg leading-8 text-muted">
+                                <p className="mt-6 max-w-3xl text-lg leading-8 text-muted">
                                     {agendaItem.description}
                                 </p>
                             )}
@@ -144,7 +151,8 @@ export default async function AgendaItemPage({
                         </div>
                     </div>
 
-                    <div className="max-w-3xl overflow-hidden rounded-2xl border border-border bg-surface">
+                    {/* Details */}
+                    <div className="mt-12 max-w-3xl overflow-hidden rounded-2xl border border-border bg-surface">
                         <dl className="divide-y divide-border">
                             <div className="grid gap-2 px-6 py-5 sm:grid-cols-3 sm:gap-6">
                                 <dt className="text-sm font-medium text-muted">
@@ -186,7 +194,9 @@ export default async function AgendaItemPage({
                                             {agendaItem.agenda.name}
                                         </Link>
                                     ) : (
-                                        "Onbekende agenda"
+                                        <span className="text-muted">
+                                            Onbekende agenda
+                                        </span>
                                     )}
                                 </dd>
                             </div>
