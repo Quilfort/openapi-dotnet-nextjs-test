@@ -34,8 +34,8 @@ export default function DeleteButton({
 
             <ConfirmModal
                 isOpen={isModalOpen}
-                title="Agenda item verwijderen?"
-                description="Weet je zeker dat je dit agenda item wilt verwijderen? Deze actie kan niet ongedaan worden."
+                title="Item verwijderen?"
+                description="Weet je zeker dat je dit item wilt verwijderen? Deze actie kan niet ongedaan worden."
                 confirmLabel="Verwijderen"
                 cancelLabel="Annuleren"
                 onConfirm={handleConfirm}

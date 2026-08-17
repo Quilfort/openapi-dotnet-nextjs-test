@@ -1,8 +1,14 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
-import { getApiAgendasId } from "@/generated/api";
+import {
+  deleteApiAgendasId,
+  getApiAgendasId,
+} from "@/generated/api";
+
 import EditButton from "@/app/components/EditButton";
+import DeleteButton from "@/app/components/DeleteButton";
 
 type AgendaPageProps = {
   params: Promise<{
@@ -22,6 +28,21 @@ export default async function AgendaPage({
   }
 
   const agenda = response.data;
+
+  async function deleteAgenda() {
+    "use server";
+
+    const response = await deleteApiAgendasId(id);
+
+    if (response.status !== 204) {
+      throw new Error(
+        "De agenda kon niet worden verwijderd."
+      );
+    }
+
+    revalidatePath("/agendas");
+    redirect("/agendas");
+  }
 
   return (
     <main className="min-h-screen">
@@ -56,7 +77,15 @@ export default async function AgendaPage({
               </h1>
             </div>
 
-            <EditButton href={`/agendas/${id}/edit`} />
+            <div className="flex shrink-0 items-center gap-3">
+              <EditButton
+                href={`/agendas/${id}/edit`}
+              />
+
+              <DeleteButton
+                onDelete={deleteAgenda}
+              />
+            </div>
           </div>
 
           {/* Description */}
