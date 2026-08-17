@@ -159,11 +159,6 @@ export default async function AgendaItemPage({
                         </dl>
                     </div>
                 </section>
-
-                {/* Footer */}
-                <footer className="border-t border-border py-6 text-sm text-muted">
-                    Agenda items → OpenAPI → Generated client → Next.js
-                </footer>
             </div>
         </main>
     );
