@@ -9,6 +9,12 @@ Zorg dat de volgende software lokaal is geïnstalleerd:
 
 Vul eerst de DefaultConnection string in de `appsettings.Development.json` bestand in. Deze string is nodig om verbinding te maken met de database.
 
+# Migrations
+```powershell
+dotnet ef migrations add [Name]
+dotnet ef database update
+``` 
+
 # API Documentation
 
 ## Swagger

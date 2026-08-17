@@ -16,6 +16,7 @@ public class AgendaItemController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<AgendaItem>>> GetAgendaItems()
     {
         return await _context.AgendaItems
@@ -24,6 +25,8 @@ public class AgendaItemController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<AgendaItem>> GetAgendaItem(Guid id)
     {
         var agendaItem = await _context.AgendaItems
@@ -39,6 +42,8 @@ public class AgendaItemController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<AgendaItem>> CreateAgendaItem(
         AgendaItem agendaItem)
     {
@@ -60,6 +65,9 @@ public class AgendaItemController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateAgendaItem(
         Guid id,
         AgendaItem agendaItem)
@@ -97,6 +105,8 @@ public class AgendaItemController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteAgendaItem(Guid id)
     {
         var agendaItem = await _context.AgendaItems.FindAsync(id);

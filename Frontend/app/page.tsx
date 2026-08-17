@@ -85,21 +85,7 @@ export default function Home() {
               </p>
             </Link>
           </div>
-
-          {/* Technology */}
-          <div className="mt-12 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-border pt-6 text-sm text-muted">
-            <span>.NET 10</span>
-            <span>PostgreSQL</span>
-            <span>OpenAPI</span>
-            <span>Next.js</span>
-            <span>TypeScript</span>
-          </div>
         </section>
-
-        {/* Footer */}
-        <footer className="border-t border-border py-6 text-sm text-muted">
-          OpenAPI → Generated client → Next.js
-        </footer>
       </div>
     </main>
   );
