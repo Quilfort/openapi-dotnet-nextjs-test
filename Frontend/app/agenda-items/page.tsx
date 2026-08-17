@@ -4,7 +4,7 @@ import { getApiAgendaItems } from "@/generated/api";
 
 function formatDateRange(
     startDate?: string,
-    endDate?: string
+    endDate?: string | null
 ): string {
     if (!startDate) {
         return "Geen datum";

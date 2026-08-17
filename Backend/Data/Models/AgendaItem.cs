@@ -34,5 +34,5 @@ public class AgendaItem
     [Column("agenda_id")]
     public Guid AgendaId { get; set; }
 
-    public Agenda Agenda { get; set; } = null!;
+    public Agenda? Agenda { get; set; }
 }

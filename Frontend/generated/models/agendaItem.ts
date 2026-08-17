@@ -8,15 +8,16 @@ import type { Agenda } from './agenda';
 
 export interface AgendaItem {
   id?: string;
-  name?: string;
+  name: string;
   /** @nullable */
   description?: string | null;
-  startDate?: string;
-  endDate?: string;
+  startDate: string;
+  /** @nullable */
+  endDate?: string | null;
   /** @nullable */
   startTime?: string | null;
   /** @nullable */
   endTime?: string | null;
-  agendaId?: string;
-  agenda?: Agenda;
+  agendaId: string;
+  agenda?: null | Agenda;
 }

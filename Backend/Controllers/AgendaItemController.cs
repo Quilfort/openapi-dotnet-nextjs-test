@@ -21,8 +21,6 @@ public class AgendaItemController : ControllerBase
     {
         return await _context.AgendaItems
             .Include(e => e.Agenda)
-            .OrderBy(e => e.StartDate)
-            .ThenBy(e => e.StartTime)
             .ToListAsync();
     }
 
@@ -49,25 +47,16 @@ public class AgendaItemController : ControllerBase
     public async Task<ActionResult<AgendaItem>> CreateAgendaItem(
         AgendaItem agendaItem)
     {
-        var validationError = await ValidateAgendaItem(agendaItem);
+        var agendaExists = await _context.Agendas
+            .AnyAsync(e => e.Id == agendaItem.AgendaId);
 
-        if (validationError != null)
-        {
-            return BadRequest(validationError);
-        }
-
-        var agenda = await _context.Agendas
-            .FirstOrDefaultAsync(e => e.Id == agendaItem.AgendaId);
-
-        if (agenda == null)
+        if (!agendaExists)
         {
             return BadRequest("The specified agenda does not exist.");
         }
 
         _context.AgendaItems.Add(agendaItem);
         await _context.SaveChangesAsync();
-
-        agendaItem.Agenda = agenda;
 
         return CreatedAtAction(
             nameof(GetAgendaItem),
@@ -86,13 +75,6 @@ public class AgendaItemController : ControllerBase
         if (id != agendaItem.Id)
         {
             return BadRequest();
-        }
-
-        var validationError = await ValidateAgendaItem(agendaItem);
-
-        if (validationError != null)
-        {
-            return BadRequest(validationError);
         }
 
         var agendaExists = await _context.Agendas
@@ -138,57 +120,5 @@ public class AgendaItemController : ControllerBase
         await _context.SaveChangesAsync();
 
         return NoContent();
-    }
-
-    private async Task<string?> ValidateAgendaItem(AgendaItem agendaItem)
-    {
-        if (string.IsNullOrWhiteSpace(agendaItem.Name))
-        {
-            return "Name is required.";
-        }
-
-        if (agendaItem.AgendaId == Guid.Empty)
-        {
-            return "Agenda is required.";
-        }
-
-        var today = DateOnly.FromDateTime(DateTime.Now);
-
-        if (agendaItem.StartDate < today)
-        {
-            return "Start date cannot be in the past.";
-        }
-
-        if (agendaItem.EndDate.HasValue &&
-            agendaItem.EndDate.Value < agendaItem.StartDate)
-        {
-            return "End date cannot be before start date.";
-        }
-
-        if (agendaItem.StartDate == today &&
-            agendaItem.StartTime.HasValue &&
-            agendaItem.StartTime.Value < TimeOnly.FromDateTime(DateTime.Now))
-        {
-            return "Start time cannot be in the past.";
-        }
-
-        if (agendaItem.EndDate.HasValue &&
-            agendaItem.EndDate.Value == agendaItem.StartDate &&
-            agendaItem.StartTime.HasValue &&
-            agendaItem.EndTime.HasValue &&
-            agendaItem.EndTime.Value < agendaItem.StartTime.Value)
-        {
-            return "End time cannot be before start time.";
-        }
-
-        var agendaExists = await _context.Agendas
-            .AnyAsync(e => e.Id == agendaItem.AgendaId);
-
-        if (!agendaExists)
-        {
-            return "The specified agenda does not exist.";
-        }
-
-        return null;
     }
 }
