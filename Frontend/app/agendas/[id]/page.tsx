@@ -1,8 +1,16 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
-import { getApiAgendasId } from "@/generated/api";
+import {
+  deleteApiAgendasId,
+  getApiAgendasId,
+  getApiAgendaItems,
+} from "@/generated/api";
+
 import EditButton from "@/app/components/EditButton";
+import DeleteButton from "@/app/components/DeleteButton";
+import AgendaItemList from "@/app/components/AgendaItemList";
 
 type AgendaPageProps = {
   params: Promise<{
@@ -15,13 +23,57 @@ export default async function AgendaPage({
 }: AgendaPageProps) {
   const { id } = await params;
 
-  const response = await getApiAgendasId(id);
+  const [agendaResponse, agendaItemsResponse] =
+    await Promise.all([
+      getApiAgendasId(id),
+      getApiAgendaItems(),
+    ]);
 
-  if (response.status !== 200) {
+  if (agendaResponse.status !== 200) {
     notFound();
   }
 
-  const agenda = response.data;
+  if (agendaItemsResponse.status !== 200) {
+    throw new Error(
+      "De agenda items konden niet worden opgehaald."
+    );
+  }
+
+  const agenda = agendaResponse.data;
+
+  const agendaItems = agendaItemsResponse.data.filter(
+    (agendaItem) => agendaItem.agendaId === id
+  );
+
+  const hasAgendaItems = agendaItems.length > 0;
+
+  const deleteTitle = hasAgendaItems
+    ? "Agenda en agenda items verwijderen?"
+    : "Agenda verwijderen?";
+
+  const deleteDescription = hasAgendaItems
+    ? `Deze agenda heeft ${agendaItems.length} ${agendaItems.length === 1
+      ? "agenda item"
+      : "agenda items"
+    }. Als je deze agenda verwijdert, worden ook alle gekoppelde agenda items verwijderd. Deze actie kan niet ongedaan worden.`
+    : "Weet je zeker dat je deze agenda wilt verwijderen? Deze actie kan niet ongedaan worden.";
+
+  async function deleteAgenda() {
+    "use server";
+
+    const response = await deleteApiAgendasId(id);
+
+    if (response.status !== 204) {
+      throw new Error(
+        "De agenda kon niet worden verwijderd."
+      );
+    }
+
+    revalidatePath("/agendas");
+    revalidatePath("/agenda-items");
+
+    redirect("/agendas");
+  }
 
   return (
     <main className="min-h-screen">
@@ -39,12 +91,13 @@ export default async function AgendaPage({
             href="/agendas"
             className="text-sm font-medium text-muted transition-colors hover:text-foreground"
           >
-            ← Alle agenda's
+            ← Alle agenda&apos;s
           </Link>
         </header>
 
         {/* Content */}
         <section className="py-16">
+          {/* Agenda header */}
           <div className="flex max-w-4xl items-start justify-between gap-8">
             <div>
               <p className="mb-3 text-sm font-medium text-muted">
@@ -56,7 +109,17 @@ export default async function AgendaPage({
               </h1>
             </div>
 
-            <EditButton href={`/agendas/${id}/edit`} />
+            <div className="flex shrink-0 items-center gap-3">
+              <EditButton
+                href={`/agendas/${id}/edit`}
+              />
+
+              <DeleteButton
+                onDelete={deleteAgenda}
+                title={deleteTitle}
+                description={deleteDescription}
+              />
+            </div>
           </div>
 
           {/* Description */}
@@ -74,6 +137,24 @@ export default async function AgendaPage({
                 Deze agenda heeft nog geen beschrijving.
               </p>
             )}
+          </div>
+
+          {/* Agenda items */}
+          <div className="mt-16">
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+                Agenda items
+              </h2>
+
+              <p className="mt-2 text-sm text-muted">
+                De items die aan deze agenda zijn gekoppeld.
+              </p>
+            </div>
+
+            <AgendaItemList
+              agendaItems={agendaItems}
+              showAgenda={false}
+            />
           </div>
         </section>
       </div>

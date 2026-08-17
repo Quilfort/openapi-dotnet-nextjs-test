@@ -1,9 +1,14 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
-import { getApiAgendaItemsId } from "@/generated/api";
+import {
+    deleteApiAgendaItemsId,
+    getApiAgendaItemsId,
+} from "@/generated/api";
 
 import EditButton from "@/app/components/EditButton";
+import DeleteButton from "@/app/components/DeleteButton";
 
 function formatDateRange(
     startDate?: string,
@@ -74,6 +79,21 @@ export default async function AgendaItemPage({
 
     const agendaItem = response.data;
 
+    async function deleteAgendaItem() {
+        "use server";
+
+        const response = await deleteApiAgendaItemsId(id);
+
+        if (response.status !== 204) {
+            throw new Error(
+                "Het agenda item kon niet worden verwijderd."
+            );
+        }
+
+        revalidatePath("/agenda-items");
+        redirect("/agenda-items");
+    }
+
     return (
         <main className="min-h-screen">
             <div className="mx-auto max-w-6xl px-6 py-8 sm:px-8 lg:px-12">
@@ -113,9 +133,15 @@ export default async function AgendaItemPage({
                             )}
                         </div>
 
-                        <EditButton
-                            href={`/agenda-items/${id}/edit`}
-                        />
+                        <div className="flex shrink-0 items-center gap-3">
+                            <EditButton
+                                href={`/agenda-items/${id}/edit`}
+                            />
+
+                            <DeleteButton
+                                onDelete={deleteAgendaItem}
+                            />
+                        </div>
                     </div>
 
                     <div className="max-w-3xl overflow-hidden rounded-2xl border border-border bg-surface">
