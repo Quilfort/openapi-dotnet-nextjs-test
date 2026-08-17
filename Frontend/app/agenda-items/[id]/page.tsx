@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 
 import { getApiAgendaItemsId } from "@/generated/api";
 
+import EditButton from "@/app/components/EditButton";
+
 function formatDateRange(
     startDate?: string,
     endDate?: string | null
@@ -94,20 +96,26 @@ export default async function AgendaItemPage({
 
                 {/* Content */}
                 <section className="py-16">
-                    <div className="mb-12 max-w-3xl">
-                        <p className="mb-3 text-sm font-medium text-muted">
-                            Agenda item
-                        </p>
-
-                        <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-                            {agendaItem.name}
-                        </h1>
-
-                        {agendaItem.description && (
-                            <p className="mt-6 text-lg leading-8 text-muted">
-                                {agendaItem.description}
+                    <div className="mb-12 flex max-w-3xl items-start justify-between gap-6">
+                        <div>
+                            <p className="mb-3 text-sm font-medium text-muted">
+                                Agenda item
                             </p>
-                        )}
+
+                            <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
+                                {agendaItem.name}
+                            </h1>
+
+                            {agendaItem.description && (
+                                <p className="mt-6 text-lg leading-8 text-muted">
+                                    {agendaItem.description}
+                                </p>
+                            )}
+                        </div>
+
+                        <EditButton
+                            href={`/agenda-items/${id}/edit`}
+                        />
                     </div>
 
                     <div className="max-w-3xl overflow-hidden rounded-2xl border border-border bg-surface">
