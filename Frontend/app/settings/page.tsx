@@ -8,7 +8,7 @@ const settings = [
         href: "/settings/departments",
     },
     {
-        title: "Mensen",
+        title: "Medewerkers",
         description:
             "Beheer mensen en koppel ze aan een afdeling.",
         href: "/settings/users",
