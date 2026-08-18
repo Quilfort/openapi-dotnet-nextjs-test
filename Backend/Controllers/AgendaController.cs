@@ -1,4 +1,5 @@
 using Backend.Data.Models;
+using Backend.Dto.Agenda;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,38 +18,73 @@ public class AgendaController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<Agenda>>> GetAgendas()
+    public async Task<ActionResult<IEnumerable<AgendaDto>>> GetAgendas()
     {
-        return await _context.Agendas.ToListAsync();
+        var agendas = await _context.Agendas
+            .Select(agenda => new AgendaDto
+            {
+                Id = agenda.Id,
+                Name = agenda.Name,
+                Description = agenda.Description
+            })
+            .ToListAsync();
+
+        return Ok(agendas);
     }
 
     [HttpGet("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<Agenda>> GetAgenda(Guid id)
+    public async Task<ActionResult<AgendaDto>> GetAgenda(Guid id)
     {
-        var agenda = await _context.Agendas.FindAsync(id);
+        var agenda = await _context.Agendas
+            .Where(agenda => agenda.Id == id)
+            .Select(agenda => new AgendaDto
+            {
+                Id = agenda.Id,
+                Name = agenda.Name,
+                Description = agenda.Description
+            })
+            .FirstOrDefaultAsync();
 
         if (agenda == null)
         {
             return NotFound();
         }
 
-        return agenda;
+        return Ok(agenda);
     }
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Agenda>> CreateAgenda(Agenda agenda)
+    public async Task<ActionResult<AgendaDto>> CreateAgenda(
+        AgendaDto agendaDto)
     {
+        var agenda = new Agenda
+        {
+            Id = agendaDto.Id == Guid.Empty
+                ? Guid.NewGuid()
+                : agendaDto.Id,
+            Name = agendaDto.Name,
+            Description = agendaDto.Description
+        };
+
         _context.Agendas.Add(agenda);
+
         await _context.SaveChangesAsync();
+
+        var createdAgenda = new AgendaDto
+        {
+            Id = agenda.Id,
+            Name = agenda.Name,
+            Description = agenda.Description
+        };
 
         return CreatedAtAction(
             nameof(GetAgenda),
             new { id = agenda.Id },
-            agenda);
+            createdAgenda);
     }
 
     [HttpPut("{id:guid}")]
@@ -57,28 +93,24 @@ public class AgendaController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateAgenda(
         Guid id,
-        Agenda agenda)
+        AgendaDto agendaDto)
     {
-        if (id != agenda.Id)
+        if (id != agendaDto.Id)
         {
             return BadRequest();
         }
 
-        _context.Entry(agenda).State = EntityState.Modified;
+        var agenda = await _context.Agendas.FindAsync(id);
 
-        try
+        if (agenda == null)
         {
-            await _context.SaveChangesAsync();
+            return NotFound();
         }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!await _context.Agendas.AnyAsync(e => e.Id == id))
-            {
-                return NotFound();
-            }
 
-            throw;
-        }
+        agenda.Name = agendaDto.Name;
+        agenda.Description = agendaDto.Description;
+
+        await _context.SaveChangesAsync();
 
         return NoContent();
     }
@@ -96,6 +128,7 @@ public class AgendaController : ControllerBase
         }
 
         _context.Agendas.Remove(agenda);
+
         await _context.SaveChangesAsync();
 
         return NoContent();
