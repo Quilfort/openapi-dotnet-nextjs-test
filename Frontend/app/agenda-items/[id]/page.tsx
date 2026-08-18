@@ -5,10 +5,12 @@ import { revalidatePath } from "next/cache";
 import {
     deleteApiAgendaItemsId,
     getApiAgendaItemsId,
+    getApiAgendaTasks,
 } from "@/generated/api";
 
 import EditButton from "@/app/components/EditButton";
 import DeleteButton from "@/app/components/DeleteButton";
+import AgendaTaskList from "@/app/components/AgendaTaskList";
 
 function formatDateRange(
     startDate?: string,
@@ -71,13 +73,28 @@ export default async function AgendaItemPage({
 }: AgendaItemPageProps) {
     const { id } = await params;
 
-    const response = await getApiAgendaItemsId(id);
+    const [agendaItemResponse, agendaTasksResponse] =
+        await Promise.all([
+            getApiAgendaItemsId(id),
+            getApiAgendaTasks(),
+        ]);
 
-    if (response.status !== 200) {
+    if (agendaItemResponse.status !== 200) {
         notFound();
     }
 
-    const agendaItem = response.data;
+    if (agendaTasksResponse.status !== 200) {
+        throw new Error(
+            "De taken konden niet worden opgehaald."
+        );
+    }
+
+    const agendaItem = agendaItemResponse.data;
+
+    const agendaTasks = agendaTasksResponse.data.filter(
+        (agendaTask) =>
+            agendaTask.agendaItemId === id
+    );
 
     async function deleteAgendaItem() {
         "use server";
@@ -92,9 +109,12 @@ export default async function AgendaItemPage({
 
         revalidatePath("/");
         revalidatePath("/agenda-items");
+        revalidatePath("/agenda-tasks");
 
         if (agendaItem.agendaId) {
-            revalidatePath(`/agendas/${agendaItem.agendaId}`);
+            revalidatePath(
+                `/agendas/${agendaItem.agendaId}`
+            );
         }
 
         redirect("/agenda-items");
@@ -130,7 +150,8 @@ export default async function AgendaItemPage({
                             </p>
 
                             <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-                                {agendaItem.name || "Naamloos agenda item"}
+                                {agendaItem.name ||
+                                    "Naamloos agenda item"}
                             </h1>
 
                             {agendaItem.description && (
@@ -202,6 +223,37 @@ export default async function AgendaItemPage({
                             </div>
                         </dl>
                     </div>
+
+                    {/* Tasks */}
+                    <section className="mt-16">
+                        <div className="mb-5 flex items-end justify-between gap-6">
+                            <div>
+                                <p className="text-sm font-medium text-muted">
+                                    Taken
+                                </p>
+
+                                <h2 className="mt-1 text-2xl font-semibold tracking-tight text-foreground">
+                                    Taken voor dit agenda item
+                                </h2>
+
+                                <p className="mt-2 text-sm text-muted">
+                                    Taken die aan dit agenda item zijn gekoppeld.
+                                </p>
+                            </div>
+
+                            <span className="shrink-0 text-sm text-muted">
+                                {agendaTasks.length}{" "}
+                                {agendaTasks.length === 1
+                                    ? "taak"
+                                    : "taken"}
+                            </span>
+                        </div>
+
+                        <AgendaTaskList
+                            agendaTasks={agendaTasks}
+                            showAgendaItem={false}
+                        />
+                    </section>
                 </section>
             </div>
         </main>
