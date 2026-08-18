@@ -8,6 +8,7 @@ import type {
   Agenda,
   AgendaItem,
   AgendaTask,
+  AgendaTaskDto,
   ProblemDetails
 } from './models';
 
@@ -641,17 +642,17 @@ export const deleteApiAgendaItemsId = async (id: string, options?: RequestInit):
 
 
 export type getApiAgendaTasksResponse200TextPlain = {
-  data: AgendaTask[]
+  data: AgendaTaskDto[]
   status: 200
 }
 
 export type getApiAgendaTasksResponse200ApplicationJson = {
-  data: AgendaTask[]
+  data: AgendaTaskDto[]
   status: 200
 }
 
 export type getApiAgendaTasksResponse200TextJson = {
-  data: AgendaTask[]
+  data: AgendaTaskDto[]
   status: 200
 }
 
@@ -691,17 +692,17 @@ export const getApiAgendaTasks = async ( options?: RequestInit): Promise<getApiA
 
 
 export type postApiAgendaTasksResponse201TextPlain = {
-  data: AgendaTask
+  data: AgendaTaskDto
   status: 201
 }
 
 export type postApiAgendaTasksResponse201ApplicationJson = {
-  data: AgendaTask
+  data: AgendaTaskDto
   status: 201
 }
 
 export type postApiAgendaTasksResponse201TextJson = {
-  data: AgendaTask
+  data: AgendaTaskDto
   status: 201
 }
 
@@ -758,17 +759,17 @@ export const postApiAgendaTasks = async (agendaTask: AgendaTask, options?: Reque
 
 
 export type getApiAgendaTasksIdResponse200TextPlain = {
-  data: AgendaTask
+  data: AgendaTaskDto
   status: 200
 }
 
 export type getApiAgendaTasksIdResponse200ApplicationJson = {
-  data: AgendaTask
+  data: AgendaTaskDto
   status: 200
 }
 
 export type getApiAgendaTasksIdResponse200TextJson = {
-  data: AgendaTask
+  data: AgendaTaskDto
   status: 200
 }
 
