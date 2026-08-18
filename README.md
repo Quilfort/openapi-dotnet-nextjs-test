@@ -1,4 +1,6 @@
-# OpenAPI .NET + Next.js Test
+# Agenda Management
+
+### a test with OpenAPI .NET + Next.js Test
 
 Test project for working with:
 
