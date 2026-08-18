@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getApiDepartments } from "@/generated/api";
 
 import CreateButton from "@/app/components/CreateButton";
-import DepartmentList from "@/app/components/DepartmentList";
+import DepartmentList from "@/app/components/Department/DepartmentList";
 
 export default async function DepartmentsPage() {
     const response = await getApiDepartments();

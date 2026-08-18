@@ -1,28 +1,48 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 import {
-    postApiDepartments,
+    getApiDepartmentsId,
+    putApiDepartmentsId,
 } from "@/generated/api";
 
 import DepartmentForm from "@/app/components/Department/DepartmentForm";
 
-export default function NewDepartmentPage() {
-    async function createDepartment(
-        department: Parameters<
-            typeof postApiDepartments
-        >[0]
+type EditDepartmentPageProps = {
+    params: Promise<{
+        id: string;
+    }>;
+};
+
+export default async function EditDepartmentPage({
+    params,
+}: EditDepartmentPageProps) {
+    const { id } = await params;
+
+    const response = await getApiDepartmentsId(id);
+
+    if (response.status !== 200) {
+        notFound();
+    }
+
+    const department = response.data;
+
+    async function updateDepartment(
+        updatedDepartment: Parameters<
+            typeof putApiDepartmentsId
+        >[1]
     ) {
         "use server";
 
-        const response = await postApiDepartments(
-            department
+        const response = await putApiDepartmentsId(
+            id,
+            updatedDepartment
         );
 
-        if (response.status !== 201) {
+        if (response.status !== 204) {
             throw new Error(
-                "De afdeling kon niet worden aangemaakt."
+                "De afdeling kon niet worden bijgewerkt."
             );
         }
 
@@ -47,18 +67,19 @@ export default function NewDepartmentPage() {
                     </p>
 
                     <h1 className="mt-2 text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-                        Nieuwe afdeling
+                        Afdeling bewerken
                     </h1>
 
                     <p className="mt-4 max-w-2xl text-lg leading-8 text-muted">
-                        Voeg een nieuwe afdeling toe aan de
-                        organisatie.
+                        Wijzig de gegevens van deze afdeling.
                     </p>
                 </section>
 
                 <section className="mt-12">
                     <DepartmentForm
-                        onSubmit={createDepartment}
+                        initialData={department}
+                        onSubmit={updateDepartment}
+                        submitLabel="Wijzigingen opslaan"
                     />
                 </section>
             </div>
