@@ -1,5 +1,4 @@
 import Link from "next/link";
-
 import type { DepartmentDto } from "@/generated/models";
 
 type DepartmentListProps = {
@@ -9,17 +8,7 @@ type DepartmentListProps = {
 export default function DepartmentList({
     departments,
 }: DepartmentListProps) {
-    const sortedDepartments = [...departments].sort((a, b) =>
-        (a.name ?? "").localeCompare(
-            b.name ?? "",
-            "nl",
-            {
-                sensitivity: "base",
-            }
-        )
-    );
-
-    if (sortedDepartments.length === 0) {
+    if (departments.length === 0) {
         return (
             <div className="rounded-2xl border border-dashed border-border bg-surface p-10 text-center">
                 <h2 className="text-lg font-semibold text-foreground">
@@ -35,27 +24,50 @@ export default function DepartmentList({
 
     return (
         <div className="overflow-hidden rounded-2xl border border-border bg-surface">
-            <div className="divide-y divide-border">
-                {sortedDepartments.map((department) => (
-                    <div
-                        key={department.id}
-                        className="flex items-center justify-between gap-6 px-6 py-5 transition-colors hover:bg-background"
-                    >
-                        <div className="min-w-0">
-                            <h2 className="font-medium text-foreground">
-                                {department.name ||
-                                    "Naamloze afdeling"}
-                            </h2>
-                        </div>
+            <div className="overflow-x-auto">
+                <table className="w-full border-collapse text-left">
+                    <thead>
+                        <tr className="border-b border-border text-sm text-muted">
+                            <th className="px-6 py-4 font-medium">
+                                Afdeling
+                            </th>
 
-                        <Link
-                            href={`/settings/departments/${department.id}/edit`}
-                            className="shrink-0 text-sm font-medium text-muted transition-colors hover:text-foreground hover:underline"
-                        >
-                            Bewerken
-                        </Link>
-                    </div>
-                ))}
+                            <th className="px-6 py-4 font-medium">
+                                ID
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {departments.map((department) => (
+                            <tr
+                                key={department.id}
+                                className="border-b border-border last:border-b-0 transition-colors hover:bg-background"
+                            >
+                                <td className="px-6 py-5">
+                                    {department.id ? (
+                                        <Link
+                                            href={`/settings/departments/${department.id}`}
+                                            className="font-medium text-foreground hover:underline"
+                                        >
+                                            {department.name ||
+                                                "Naamloze afdeling"}
+                                        </Link>
+                                    ) : (
+                                        <span className="font-medium text-foreground">
+                                            {department.name ||
+                                                "Naamloze afdeling"}
+                                        </span>
+                                    )}
+                                </td>
+
+                                <td className="break-all px-6 py-5 text-sm text-muted">
+                                    {department.id || "—"}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
         </div>
     );
