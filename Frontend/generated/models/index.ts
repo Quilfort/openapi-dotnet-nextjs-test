@@ -7,5 +7,7 @@
 
 export * from './agenda';
 export * from './agendaItem';
+export * from './agendaItemDto';
 export * from './agendaTask';
+export * from './agendaTaskDto';
 export * from './problemDetails';
