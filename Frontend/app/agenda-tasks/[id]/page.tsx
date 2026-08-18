@@ -112,7 +112,6 @@ export default async function AgendaTaskPage({
                     {/* Details */}
                     <div className="max-w-3xl overflow-hidden rounded-2xl border border-border bg-surface">
                         <dl className="divide-y divide-border">
-                            {/* Deadline */}
                             <div className="grid gap-2 px-6 py-5 sm:grid-cols-3 sm:gap-6">
                                 <dt className="text-sm font-medium text-muted">
                                     Deadline
@@ -125,7 +124,6 @@ export default async function AgendaTaskPage({
                                 </dd>
                             </div>
 
-                            {/* Agenda item */}
                             <div className="grid gap-2 px-6 py-5 sm:grid-cols-3 sm:gap-6">
                                 <dt className="text-sm font-medium text-muted">
                                     Agenda item
