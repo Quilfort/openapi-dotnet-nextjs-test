@@ -18,4 +18,9 @@ public partial class User
 
     [Column("email")]
     public string? Email { get; set; }
+
+    [Column("department_id")]
+    public Guid? DepartmentId { get; set; }
+
+    public Department? Department { get; set; }
 }
