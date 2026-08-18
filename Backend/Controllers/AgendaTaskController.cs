@@ -81,10 +81,10 @@ public class AgendaTaskController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<AgendaTaskDto>> CreateAgendaTask(
-        AgendaTask agendaTask)
+        AgendaTaskDto agendaTaskDto)
     {
         var agendaItemExists = await _context.AgendaItems
-            .AnyAsync(e => e.Id == agendaTask.AgendaItemId);
+            .AnyAsync(e => e.Id == agendaTaskDto.AgendaItemId);
 
         if (!agendaItemExists)
         {
@@ -93,7 +93,20 @@ public class AgendaTaskController : ControllerBase
             );
         }
 
+        var agendaTask = new AgendaTask
+        {
+            Id = agendaTaskDto.Id == Guid.Empty
+                ? Guid.NewGuid()
+                : agendaTaskDto.Id,
+
+            Name = agendaTaskDto.Name,
+            Description = agendaTaskDto.Description,
+            DeadlineDate = agendaTaskDto.DeadlineDate,
+            AgendaItemId = agendaTaskDto.AgendaItemId
+        };
+
         _context.AgendaTasks.Add(agendaTask);
+
         await _context.SaveChangesAsync();
 
         var createdAgendaTask = await _context.AgendaTasks
@@ -129,15 +142,15 @@ public class AgendaTaskController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateAgendaTask(
         Guid id,
-        AgendaTask agendaTask)
+        AgendaTaskDto agendaTaskDto)
     {
-        if (id != agendaTask.Id)
+        if (id != agendaTaskDto.Id)
         {
             return BadRequest();
         }
 
         var agendaItemExists = await _context.AgendaItems
-            .AnyAsync(e => e.Id == agendaTask.AgendaItemId);
+            .AnyAsync(e => e.Id == agendaTaskDto.AgendaItemId);
 
         if (!agendaItemExists)
         {
@@ -146,21 +159,20 @@ public class AgendaTaskController : ControllerBase
             );
         }
 
-        _context.Entry(agendaTask).State = EntityState.Modified;
+        var agendaTask = await _context.AgendaTasks
+            .FindAsync(id);
 
-        try
+        if (agendaTask == null)
         {
-            await _context.SaveChangesAsync();
+            return NotFound();
         }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!await _context.AgendaTasks.AnyAsync(e => e.Id == id))
-            {
-                return NotFound();
-            }
 
-            throw;
-        }
+        agendaTask.Name = agendaTaskDto.Name;
+        agendaTask.Description = agendaTaskDto.Description;
+        agendaTask.DeadlineDate = agendaTaskDto.DeadlineDate;
+        agendaTask.AgendaItemId = agendaTaskDto.AgendaItemId;
+
+        await _context.SaveChangesAsync();
 
         return NoContent();
     }
@@ -178,6 +190,7 @@ public class AgendaTaskController : ControllerBase
         }
 
         _context.AgendaTasks.Remove(agendaTask);
+
         await _context.SaveChangesAsync();
 
         return NoContent();
