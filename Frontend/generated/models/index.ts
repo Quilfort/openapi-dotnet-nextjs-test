@@ -5,9 +5,11 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export * from './agenda';
-export * from './agendaItem';
+export * from './agendaDto';
 export * from './agendaItemDto';
-export * from './agendaTask';
 export * from './agendaTaskDto';
+export * from './department';
+export * from './departmentDto';
 export * from './problemDetails';
+export * from './user';
+export * from './userDto';

@@ -5,26 +5,29 @@
  * OpenAPI spec version: 1.0.0
  */
 import type {
-  Agenda,
-  AgendaItem,
-  AgendaTask,
+  AgendaDto,
+  AgendaItemDto,
   AgendaTaskDto,
-  ProblemDetails
+  Department,
+  DepartmentDto,
+  ProblemDetails,
+  User,
+  UserDto
 } from './models';
 
 
 export type getApiAgendasResponse200TextPlain = {
-  data: Agenda[]
+  data: AgendaDto[]
   status: 200
 }
 
 export type getApiAgendasResponse200ApplicationJson = {
-  data: Agenda[]
+  data: AgendaDto[]
   status: 200
 }
 
 export type getApiAgendasResponse200TextJson = {
-  data: Agenda[]
+  data: AgendaDto[]
   status: 200
 }
 
@@ -64,17 +67,17 @@ export const getApiAgendas = async ( options?: RequestInit): Promise<getApiAgend
 
 
 export type postApiAgendasResponse201TextPlain = {
-  data: Agenda
+  data: AgendaDto
   status: 201
 }
 
 export type postApiAgendasResponse201ApplicationJson = {
-  data: Agenda
+  data: AgendaDto
   status: 201
 }
 
 export type postApiAgendasResponse201TextJson = {
-  data: Agenda
+  data: AgendaDto
   status: 201
 }
 
@@ -110,14 +113,14 @@ export const getPostApiAgendasUrl = () => {
   return `https://localhost:7229/api/agendas`
 }
 
-export const postApiAgendas = async (agenda: Agenda, options?: RequestInit): Promise<postApiAgendasResponse> => {
+export const postApiAgendas = async (agendaDto: AgendaDto, options?: RequestInit): Promise<postApiAgendasResponse> => {
 
   const res = await fetch(getPostApiAgendasUrl(),
   {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(agenda)
+    body: JSON.stringify(agendaDto)
   }
 )
 
@@ -131,17 +134,17 @@ export const postApiAgendas = async (agenda: Agenda, options?: RequestInit): Pro
 
 
 export type getApiAgendasIdResponse200TextPlain = {
-  data: Agenda
+  data: AgendaDto
   status: 200
 }
 
 export type getApiAgendasIdResponse200ApplicationJson = {
-  data: Agenda
+  data: AgendaDto
   status: 200
 }
 
 export type getApiAgendasIdResponse200TextJson = {
-  data: Agenda
+  data: AgendaDto
   status: 200
 }
 
@@ -250,14 +253,14 @@ export const getPutApiAgendasIdUrl = (id: string,) => {
 }
 
 export const putApiAgendasId = async (id: string,
-    agenda: Agenda, options?: RequestInit): Promise<putApiAgendasIdResponse> => {
+    agendaDto: AgendaDto, options?: RequestInit): Promise<putApiAgendasIdResponse> => {
 
   const res = await fetch(getPutApiAgendasIdUrl(id),
   {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(agenda)
+    body: JSON.stringify(agendaDto)
   }
 )
 
@@ -328,17 +331,17 @@ export const deleteApiAgendasId = async (id: string, options?: RequestInit): Pro
 
 
 export type getApiAgendaItemsResponse200TextPlain = {
-  data: AgendaItem[]
+  data: AgendaItemDto[]
   status: 200
 }
 
 export type getApiAgendaItemsResponse200ApplicationJson = {
-  data: AgendaItem[]
+  data: AgendaItemDto[]
   status: 200
 }
 
 export type getApiAgendaItemsResponse200TextJson = {
-  data: AgendaItem[]
+  data: AgendaItemDto[]
   status: 200
 }
 
@@ -378,17 +381,17 @@ export const getApiAgendaItems = async ( options?: RequestInit): Promise<getApiA
 
 
 export type postApiAgendaItemsResponse201TextPlain = {
-  data: AgendaItem
+  data: AgendaItemDto
   status: 201
 }
 
 export type postApiAgendaItemsResponse201ApplicationJson = {
-  data: AgendaItem
+  data: AgendaItemDto
   status: 201
 }
 
 export type postApiAgendaItemsResponse201TextJson = {
-  data: AgendaItem
+  data: AgendaItemDto
   status: 201
 }
 
@@ -424,14 +427,14 @@ export const getPostApiAgendaItemsUrl = () => {
   return `https://localhost:7229/api/agenda-items`
 }
 
-export const postApiAgendaItems = async (agendaItem: AgendaItem, options?: RequestInit): Promise<postApiAgendaItemsResponse> => {
+export const postApiAgendaItems = async (agendaItemDto: AgendaItemDto, options?: RequestInit): Promise<postApiAgendaItemsResponse> => {
 
   const res = await fetch(getPostApiAgendaItemsUrl(),
   {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(agendaItem)
+    body: JSON.stringify(agendaItemDto)
   }
 )
 
@@ -445,17 +448,17 @@ export const postApiAgendaItems = async (agendaItem: AgendaItem, options?: Reque
 
 
 export type getApiAgendaItemsIdResponse200TextPlain = {
-  data: AgendaItem
+  data: AgendaItemDto
   status: 200
 }
 
 export type getApiAgendaItemsIdResponse200ApplicationJson = {
-  data: AgendaItem
+  data: AgendaItemDto
   status: 200
 }
 
 export type getApiAgendaItemsIdResponse200TextJson = {
-  data: AgendaItem
+  data: AgendaItemDto
   status: 200
 }
 
@@ -564,14 +567,14 @@ export const getPutApiAgendaItemsIdUrl = (id: string,) => {
 }
 
 export const putApiAgendaItemsId = async (id: string,
-    agendaItem: AgendaItem, options?: RequestInit): Promise<putApiAgendaItemsIdResponse> => {
+    agendaItemDto: AgendaItemDto, options?: RequestInit): Promise<putApiAgendaItemsIdResponse> => {
 
   const res = await fetch(getPutApiAgendaItemsIdUrl(id),
   {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(agendaItem)
+    body: JSON.stringify(agendaItemDto)
   }
 )
 
@@ -738,14 +741,14 @@ export const getPostApiAgendaTasksUrl = () => {
   return `https://localhost:7229/api/agenda-tasks`
 }
 
-export const postApiAgendaTasks = async (agendaTask: AgendaTask, options?: RequestInit): Promise<postApiAgendaTasksResponse> => {
+export const postApiAgendaTasks = async (agendaTaskDto: AgendaTaskDto, options?: RequestInit): Promise<postApiAgendaTasksResponse> => {
 
   const res = await fetch(getPostApiAgendaTasksUrl(),
   {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(agendaTask)
+    body: JSON.stringify(agendaTaskDto)
   }
 )
 
@@ -878,14 +881,14 @@ export const getPutApiAgendaTasksIdUrl = (id: string,) => {
 }
 
 export const putApiAgendaTasksId = async (id: string,
-    agendaTask: AgendaTask, options?: RequestInit): Promise<putApiAgendaTasksIdResponse> => {
+    agendaTaskDto: AgendaTaskDto, options?: RequestInit): Promise<putApiAgendaTasksIdResponse> => {
 
   const res = await fetch(getPutApiAgendaTasksIdUrl(id),
   {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(agendaTask)
+    body: JSON.stringify(agendaTaskDto)
   }
 )
 
@@ -951,6 +954,634 @@ export const deleteApiAgendaTasksId = async (id: string, options?: RequestInit):
 
   const data: deleteApiAgendaTasksIdResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : undefined
   return { data, status: res.status, headers: res.headers } as deleteApiAgendaTasksIdResponse
+}
+
+
+
+export type getApiDepartmentsResponse200TextPlain = {
+  data: DepartmentDto[]
+  status: 200
+}
+
+export type getApiDepartmentsResponse200ApplicationJson = {
+  data: DepartmentDto[]
+  status: 200
+}
+
+export type getApiDepartmentsResponse200TextJson = {
+  data: DepartmentDto[]
+  status: 200
+}
+
+export type getApiDepartmentsResponseSuccess = (getApiDepartmentsResponse200TextPlain | getApiDepartmentsResponse200ApplicationJson | getApiDepartmentsResponse200TextJson) & {
+  headers: Headers;
+};
+;
+
+export type getApiDepartmentsResponse = (getApiDepartmentsResponseSuccess)
+
+export const getGetApiDepartmentsUrl = () => {
+
+
+
+
+  return `https://localhost:7229/api/departments`
+}
+
+export const getApiDepartments = async ( options?: RequestInit): Promise<getApiDepartmentsResponse> => {
+
+  const res = await fetch(getGetApiDepartmentsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+)
+
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getApiDepartmentsResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
+  return { data, status: res.status, headers: res.headers } as getApiDepartmentsResponse
+}
+
+
+
+export type postApiDepartmentsResponse201TextPlain = {
+  data: DepartmentDto
+  status: 201
+}
+
+export type postApiDepartmentsResponse201ApplicationJson = {
+  data: DepartmentDto
+  status: 201
+}
+
+export type postApiDepartmentsResponse201TextJson = {
+  data: DepartmentDto
+  status: 201
+}
+
+export type postApiDepartmentsResponse400TextPlain = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type postApiDepartmentsResponse400ApplicationJson = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type postApiDepartmentsResponse400TextJson = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type postApiDepartmentsResponseSuccess = (postApiDepartmentsResponse201TextPlain | postApiDepartmentsResponse201ApplicationJson | postApiDepartmentsResponse201TextJson) & {
+  headers: Headers;
+};
+export type postApiDepartmentsResponseError = (postApiDepartmentsResponse400TextPlain | postApiDepartmentsResponse400ApplicationJson | postApiDepartmentsResponse400TextJson) & {
+  headers: Headers;
+};
+
+export type postApiDepartmentsResponse = (postApiDepartmentsResponseSuccess | postApiDepartmentsResponseError)
+
+export const getPostApiDepartmentsUrl = () => {
+
+
+
+
+  return `https://localhost:7229/api/departments`
+}
+
+export const postApiDepartments = async (department: Department, options?: RequestInit): Promise<postApiDepartmentsResponse> => {
+
+  const res = await fetch(getPostApiDepartmentsUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(department)
+  }
+)
+
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: postApiDepartmentsResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
+  return { data, status: res.status, headers: res.headers } as postApiDepartmentsResponse
+}
+
+
+
+export type getApiDepartmentsIdResponse200TextPlain = {
+  data: DepartmentDto
+  status: 200
+}
+
+export type getApiDepartmentsIdResponse200ApplicationJson = {
+  data: DepartmentDto
+  status: 200
+}
+
+export type getApiDepartmentsIdResponse200TextJson = {
+  data: DepartmentDto
+  status: 200
+}
+
+export type getApiDepartmentsIdResponse404TextPlain = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type getApiDepartmentsIdResponse404ApplicationJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type getApiDepartmentsIdResponse404TextJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type getApiDepartmentsIdResponseSuccess = (getApiDepartmentsIdResponse200TextPlain | getApiDepartmentsIdResponse200ApplicationJson | getApiDepartmentsIdResponse200TextJson) & {
+  headers: Headers;
+};
+export type getApiDepartmentsIdResponseError = (getApiDepartmentsIdResponse404TextPlain | getApiDepartmentsIdResponse404ApplicationJson | getApiDepartmentsIdResponse404TextJson) & {
+  headers: Headers;
+};
+
+export type getApiDepartmentsIdResponse = (getApiDepartmentsIdResponseSuccess | getApiDepartmentsIdResponseError)
+
+export const getGetApiDepartmentsIdUrl = (id: string,) => {
+
+
+
+
+  return `https://localhost:7229/api/departments/${id}`
+}
+
+export const getApiDepartmentsId = async (id: string, options?: RequestInit): Promise<getApiDepartmentsIdResponse> => {
+
+  const res = await fetch(getGetApiDepartmentsIdUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+)
+
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getApiDepartmentsIdResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
+  return { data, status: res.status, headers: res.headers } as getApiDepartmentsIdResponse
+}
+
+
+
+export type putApiDepartmentsIdResponse204 = {
+  data: void
+  status: 204
+}
+
+export type putApiDepartmentsIdResponse400TextPlain = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type putApiDepartmentsIdResponse400ApplicationJson = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type putApiDepartmentsIdResponse400TextJson = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type putApiDepartmentsIdResponse404TextPlain = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type putApiDepartmentsIdResponse404ApplicationJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type putApiDepartmentsIdResponse404TextJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type putApiDepartmentsIdResponseSuccess = (putApiDepartmentsIdResponse204) & {
+  headers: Headers;
+};
+export type putApiDepartmentsIdResponseError = (putApiDepartmentsIdResponse400TextPlain | putApiDepartmentsIdResponse400ApplicationJson | putApiDepartmentsIdResponse400TextJson | putApiDepartmentsIdResponse404TextPlain | putApiDepartmentsIdResponse404ApplicationJson | putApiDepartmentsIdResponse404TextJson) & {
+  headers: Headers;
+};
+
+export type putApiDepartmentsIdResponse = (putApiDepartmentsIdResponseSuccess | putApiDepartmentsIdResponseError)
+
+export const getPutApiDepartmentsIdUrl = (id: string,) => {
+
+
+
+
+  return `https://localhost:7229/api/departments/${id}`
+}
+
+export const putApiDepartmentsId = async (id: string,
+    department: Department, options?: RequestInit): Promise<putApiDepartmentsIdResponse> => {
+
+  const res = await fetch(getPutApiDepartmentsIdUrl(id),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(department)
+  }
+)
+
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: putApiDepartmentsIdResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : undefined
+  return { data, status: res.status, headers: res.headers } as putApiDepartmentsIdResponse
+}
+
+
+
+export type deleteApiDepartmentsIdResponse204 = {
+  data: void
+  status: 204
+}
+
+export type deleteApiDepartmentsIdResponse404TextPlain = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type deleteApiDepartmentsIdResponse404ApplicationJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type deleteApiDepartmentsIdResponse404TextJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type deleteApiDepartmentsIdResponseSuccess = (deleteApiDepartmentsIdResponse204) & {
+  headers: Headers;
+};
+export type deleteApiDepartmentsIdResponseError = (deleteApiDepartmentsIdResponse404TextPlain | deleteApiDepartmentsIdResponse404ApplicationJson | deleteApiDepartmentsIdResponse404TextJson) & {
+  headers: Headers;
+};
+
+export type deleteApiDepartmentsIdResponse = (deleteApiDepartmentsIdResponseSuccess | deleteApiDepartmentsIdResponseError)
+
+export const getDeleteApiDepartmentsIdUrl = (id: string,) => {
+
+
+
+
+  return `https://localhost:7229/api/departments/${id}`
+}
+
+export const deleteApiDepartmentsId = async (id: string, options?: RequestInit): Promise<deleteApiDepartmentsIdResponse> => {
+
+  const res = await fetch(getDeleteApiDepartmentsIdUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+)
+
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteApiDepartmentsIdResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : undefined
+  return { data, status: res.status, headers: res.headers } as deleteApiDepartmentsIdResponse
+}
+
+
+
+export type getApiUsersResponse200TextPlain = {
+  data: UserDto[]
+  status: 200
+}
+
+export type getApiUsersResponse200ApplicationJson = {
+  data: UserDto[]
+  status: 200
+}
+
+export type getApiUsersResponse200TextJson = {
+  data: UserDto[]
+  status: 200
+}
+
+export type getApiUsersResponseSuccess = (getApiUsersResponse200TextPlain | getApiUsersResponse200ApplicationJson | getApiUsersResponse200TextJson) & {
+  headers: Headers;
+};
+;
+
+export type getApiUsersResponse = (getApiUsersResponseSuccess)
+
+export const getGetApiUsersUrl = () => {
+
+
+
+
+  return `https://localhost:7229/api/users`
+}
+
+export const getApiUsers = async ( options?: RequestInit): Promise<getApiUsersResponse> => {
+
+  const res = await fetch(getGetApiUsersUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+)
+
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getApiUsersResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
+  return { data, status: res.status, headers: res.headers } as getApiUsersResponse
+}
+
+
+
+export type postApiUsersResponse201TextPlain = {
+  data: UserDto
+  status: 201
+}
+
+export type postApiUsersResponse201ApplicationJson = {
+  data: UserDto
+  status: 201
+}
+
+export type postApiUsersResponse201TextJson = {
+  data: UserDto
+  status: 201
+}
+
+export type postApiUsersResponse400TextPlain = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type postApiUsersResponse400ApplicationJson = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type postApiUsersResponse400TextJson = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type postApiUsersResponseSuccess = (postApiUsersResponse201TextPlain | postApiUsersResponse201ApplicationJson | postApiUsersResponse201TextJson) & {
+  headers: Headers;
+};
+export type postApiUsersResponseError = (postApiUsersResponse400TextPlain | postApiUsersResponse400ApplicationJson | postApiUsersResponse400TextJson) & {
+  headers: Headers;
+};
+
+export type postApiUsersResponse = (postApiUsersResponseSuccess | postApiUsersResponseError)
+
+export const getPostApiUsersUrl = () => {
+
+
+
+
+  return `https://localhost:7229/api/users`
+}
+
+export const postApiUsers = async (user: User, options?: RequestInit): Promise<postApiUsersResponse> => {
+
+  const res = await fetch(getPostApiUsersUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(user)
+  }
+)
+
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: postApiUsersResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
+  return { data, status: res.status, headers: res.headers } as postApiUsersResponse
+}
+
+
+
+export type getApiUsersIdResponse200TextPlain = {
+  data: UserDto
+  status: 200
+}
+
+export type getApiUsersIdResponse200ApplicationJson = {
+  data: UserDto
+  status: 200
+}
+
+export type getApiUsersIdResponse200TextJson = {
+  data: UserDto
+  status: 200
+}
+
+export type getApiUsersIdResponse404TextPlain = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type getApiUsersIdResponse404ApplicationJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type getApiUsersIdResponse404TextJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type getApiUsersIdResponseSuccess = (getApiUsersIdResponse200TextPlain | getApiUsersIdResponse200ApplicationJson | getApiUsersIdResponse200TextJson) & {
+  headers: Headers;
+};
+export type getApiUsersIdResponseError = (getApiUsersIdResponse404TextPlain | getApiUsersIdResponse404ApplicationJson | getApiUsersIdResponse404TextJson) & {
+  headers: Headers;
+};
+
+export type getApiUsersIdResponse = (getApiUsersIdResponseSuccess | getApiUsersIdResponseError)
+
+export const getGetApiUsersIdUrl = (id: string,) => {
+
+
+
+
+  return `https://localhost:7229/api/users/${id}`
+}
+
+export const getApiUsersId = async (id: string, options?: RequestInit): Promise<getApiUsersIdResponse> => {
+
+  const res = await fetch(getGetApiUsersIdUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+)
+
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getApiUsersIdResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
+  return { data, status: res.status, headers: res.headers } as getApiUsersIdResponse
+}
+
+
+
+export type putApiUsersIdResponse204 = {
+  data: void
+  status: 204
+}
+
+export type putApiUsersIdResponse400TextPlain = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type putApiUsersIdResponse400ApplicationJson = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type putApiUsersIdResponse400TextJson = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type putApiUsersIdResponse404TextPlain = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type putApiUsersIdResponse404ApplicationJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type putApiUsersIdResponse404TextJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type putApiUsersIdResponseSuccess = (putApiUsersIdResponse204) & {
+  headers: Headers;
+};
+export type putApiUsersIdResponseError = (putApiUsersIdResponse400TextPlain | putApiUsersIdResponse400ApplicationJson | putApiUsersIdResponse400TextJson | putApiUsersIdResponse404TextPlain | putApiUsersIdResponse404ApplicationJson | putApiUsersIdResponse404TextJson) & {
+  headers: Headers;
+};
+
+export type putApiUsersIdResponse = (putApiUsersIdResponseSuccess | putApiUsersIdResponseError)
+
+export const getPutApiUsersIdUrl = (id: string,) => {
+
+
+
+
+  return `https://localhost:7229/api/users/${id}`
+}
+
+export const putApiUsersId = async (id: string,
+    user: User, options?: RequestInit): Promise<putApiUsersIdResponse> => {
+
+  const res = await fetch(getPutApiUsersIdUrl(id),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(user)
+  }
+)
+
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: putApiUsersIdResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : undefined
+  return { data, status: res.status, headers: res.headers } as putApiUsersIdResponse
+}
+
+
+
+export type deleteApiUsersIdResponse204 = {
+  data: void
+  status: 204
+}
+
+export type deleteApiUsersIdResponse404TextPlain = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type deleteApiUsersIdResponse404ApplicationJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type deleteApiUsersIdResponse404TextJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type deleteApiUsersIdResponseSuccess = (deleteApiUsersIdResponse204) & {
+  headers: Headers;
+};
+export type deleteApiUsersIdResponseError = (deleteApiUsersIdResponse404TextPlain | deleteApiUsersIdResponse404ApplicationJson | deleteApiUsersIdResponse404TextJson) & {
+  headers: Headers;
+};
+
+export type deleteApiUsersIdResponse = (deleteApiUsersIdResponseSuccess | deleteApiUsersIdResponseError)
+
+export const getDeleteApiUsersIdUrl = (id: string,) => {
+
+
+
+
+  return `https://localhost:7229/api/users/${id}`
+}
+
+export const deleteApiUsersId = async (id: string, options?: RequestInit): Promise<deleteApiUsersIdResponse> => {
+
+  const res = await fetch(getDeleteApiUsersIdUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+)
+
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteApiUsersIdResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : undefined
+  return { data, status: res.status, headers: res.headers } as deleteApiUsersIdResponse
 }
 
 
