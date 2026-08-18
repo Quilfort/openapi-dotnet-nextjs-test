@@ -5,6 +5,7 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { Agenda } from './agenda';
+import type { AgendaTask } from './agendaTask';
 
 export interface AgendaItem {
   id?: string;
@@ -20,4 +21,5 @@ export interface AgendaItem {
   endTime?: string | null;
   agendaId: string;
   agenda?: null | Agenda;
+  agendaTasks?: AgendaTask[];
 }
