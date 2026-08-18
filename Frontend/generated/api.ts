@@ -7,6 +7,7 @@
 import type {
   Agenda,
   AgendaItem,
+  AgendaTask,
   ProblemDetails
 } from './models';
 
@@ -635,6 +636,320 @@ export const deleteApiAgendaItemsId = async (id: string, options?: RequestInit):
 
   const data: deleteApiAgendaItemsIdResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : undefined
   return { data, status: res.status, headers: res.headers } as deleteApiAgendaItemsIdResponse
+}
+
+
+
+export type getApiAgendaTasksResponse200TextPlain = {
+  data: AgendaTask[]
+  status: 200
+}
+
+export type getApiAgendaTasksResponse200ApplicationJson = {
+  data: AgendaTask[]
+  status: 200
+}
+
+export type getApiAgendaTasksResponse200TextJson = {
+  data: AgendaTask[]
+  status: 200
+}
+
+export type getApiAgendaTasksResponseSuccess = (getApiAgendaTasksResponse200TextPlain | getApiAgendaTasksResponse200ApplicationJson | getApiAgendaTasksResponse200TextJson) & {
+  headers: Headers;
+};
+;
+
+export type getApiAgendaTasksResponse = (getApiAgendaTasksResponseSuccess)
+
+export const getGetApiAgendaTasksUrl = () => {
+
+
+
+
+  return `https://localhost:7229/api/agenda-tasks`
+}
+
+export const getApiAgendaTasks = async ( options?: RequestInit): Promise<getApiAgendaTasksResponse> => {
+
+  const res = await fetch(getGetApiAgendaTasksUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+)
+
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getApiAgendaTasksResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
+  return { data, status: res.status, headers: res.headers } as getApiAgendaTasksResponse
+}
+
+
+
+export type postApiAgendaTasksResponse201TextPlain = {
+  data: AgendaTask
+  status: 201
+}
+
+export type postApiAgendaTasksResponse201ApplicationJson = {
+  data: AgendaTask
+  status: 201
+}
+
+export type postApiAgendaTasksResponse201TextJson = {
+  data: AgendaTask
+  status: 201
+}
+
+export type postApiAgendaTasksResponse400TextPlain = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type postApiAgendaTasksResponse400ApplicationJson = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type postApiAgendaTasksResponse400TextJson = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type postApiAgendaTasksResponseSuccess = (postApiAgendaTasksResponse201TextPlain | postApiAgendaTasksResponse201ApplicationJson | postApiAgendaTasksResponse201TextJson) & {
+  headers: Headers;
+};
+export type postApiAgendaTasksResponseError = (postApiAgendaTasksResponse400TextPlain | postApiAgendaTasksResponse400ApplicationJson | postApiAgendaTasksResponse400TextJson) & {
+  headers: Headers;
+};
+
+export type postApiAgendaTasksResponse = (postApiAgendaTasksResponseSuccess | postApiAgendaTasksResponseError)
+
+export const getPostApiAgendaTasksUrl = () => {
+
+
+
+
+  return `https://localhost:7229/api/agenda-tasks`
+}
+
+export const postApiAgendaTasks = async (agendaTask: AgendaTask, options?: RequestInit): Promise<postApiAgendaTasksResponse> => {
+
+  const res = await fetch(getPostApiAgendaTasksUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(agendaTask)
+  }
+)
+
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: postApiAgendaTasksResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
+  return { data, status: res.status, headers: res.headers } as postApiAgendaTasksResponse
+}
+
+
+
+export type getApiAgendaTasksIdResponse200TextPlain = {
+  data: AgendaTask
+  status: 200
+}
+
+export type getApiAgendaTasksIdResponse200ApplicationJson = {
+  data: AgendaTask
+  status: 200
+}
+
+export type getApiAgendaTasksIdResponse200TextJson = {
+  data: AgendaTask
+  status: 200
+}
+
+export type getApiAgendaTasksIdResponse404TextPlain = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type getApiAgendaTasksIdResponse404ApplicationJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type getApiAgendaTasksIdResponse404TextJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type getApiAgendaTasksIdResponseSuccess = (getApiAgendaTasksIdResponse200TextPlain | getApiAgendaTasksIdResponse200ApplicationJson | getApiAgendaTasksIdResponse200TextJson) & {
+  headers: Headers;
+};
+export type getApiAgendaTasksIdResponseError = (getApiAgendaTasksIdResponse404TextPlain | getApiAgendaTasksIdResponse404ApplicationJson | getApiAgendaTasksIdResponse404TextJson) & {
+  headers: Headers;
+};
+
+export type getApiAgendaTasksIdResponse = (getApiAgendaTasksIdResponseSuccess | getApiAgendaTasksIdResponseError)
+
+export const getGetApiAgendaTasksIdUrl = (id: string,) => {
+
+
+
+
+  return `https://localhost:7229/api/agenda-tasks/${id}`
+}
+
+export const getApiAgendaTasksId = async (id: string, options?: RequestInit): Promise<getApiAgendaTasksIdResponse> => {
+
+  const res = await fetch(getGetApiAgendaTasksIdUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+)
+
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getApiAgendaTasksIdResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
+  return { data, status: res.status, headers: res.headers } as getApiAgendaTasksIdResponse
+}
+
+
+
+export type putApiAgendaTasksIdResponse204 = {
+  data: void
+  status: 204
+}
+
+export type putApiAgendaTasksIdResponse400TextPlain = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type putApiAgendaTasksIdResponse400ApplicationJson = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type putApiAgendaTasksIdResponse400TextJson = {
+  data: ProblemDetails
+  status: 400
+}
+
+export type putApiAgendaTasksIdResponse404TextPlain = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type putApiAgendaTasksIdResponse404ApplicationJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type putApiAgendaTasksIdResponse404TextJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type putApiAgendaTasksIdResponseSuccess = (putApiAgendaTasksIdResponse204) & {
+  headers: Headers;
+};
+export type putApiAgendaTasksIdResponseError = (putApiAgendaTasksIdResponse400TextPlain | putApiAgendaTasksIdResponse400ApplicationJson | putApiAgendaTasksIdResponse400TextJson | putApiAgendaTasksIdResponse404TextPlain | putApiAgendaTasksIdResponse404ApplicationJson | putApiAgendaTasksIdResponse404TextJson) & {
+  headers: Headers;
+};
+
+export type putApiAgendaTasksIdResponse = (putApiAgendaTasksIdResponseSuccess | putApiAgendaTasksIdResponseError)
+
+export const getPutApiAgendaTasksIdUrl = (id: string,) => {
+
+
+
+
+  return `https://localhost:7229/api/agenda-tasks/${id}`
+}
+
+export const putApiAgendaTasksId = async (id: string,
+    agendaTask: AgendaTask, options?: RequestInit): Promise<putApiAgendaTasksIdResponse> => {
+
+  const res = await fetch(getPutApiAgendaTasksIdUrl(id),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(agendaTask)
+  }
+)
+
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: putApiAgendaTasksIdResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : undefined
+  return { data, status: res.status, headers: res.headers } as putApiAgendaTasksIdResponse
+}
+
+
+
+export type deleteApiAgendaTasksIdResponse204 = {
+  data: void
+  status: 204
+}
+
+export type deleteApiAgendaTasksIdResponse404TextPlain = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type deleteApiAgendaTasksIdResponse404ApplicationJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type deleteApiAgendaTasksIdResponse404TextJson = {
+  data: ProblemDetails
+  status: 404
+}
+
+export type deleteApiAgendaTasksIdResponseSuccess = (deleteApiAgendaTasksIdResponse204) & {
+  headers: Headers;
+};
+export type deleteApiAgendaTasksIdResponseError = (deleteApiAgendaTasksIdResponse404TextPlain | deleteApiAgendaTasksIdResponse404ApplicationJson | deleteApiAgendaTasksIdResponse404TextJson) & {
+  headers: Headers;
+};
+
+export type deleteApiAgendaTasksIdResponse = (deleteApiAgendaTasksIdResponseSuccess | deleteApiAgendaTasksIdResponseError)
+
+export const getDeleteApiAgendaTasksIdUrl = (id: string,) => {
+
+
+
+
+  return `https://localhost:7229/api/agenda-tasks/${id}`
+}
+
+export const deleteApiAgendaTasksId = async (id: string, options?: RequestInit): Promise<deleteApiAgendaTasksIdResponse> => {
+
+  const res = await fetch(getDeleteApiAgendaTasksIdUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+)
+
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteApiAgendaTasksIdResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : undefined
+  return { data, status: res.status, headers: res.headers } as deleteApiAgendaTasksIdResponse
 }
 
 

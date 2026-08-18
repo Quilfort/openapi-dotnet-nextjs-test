@@ -14,9 +14,9 @@ const navigation = [
         href: "/agendas",
     },
     {
-        name: "Werk Items",
-        href: "#",
-        disabled: true,
+        name: "Taken",
+        href: "/agenda-tasks",
+        disabled: false,
     },
 ];
 

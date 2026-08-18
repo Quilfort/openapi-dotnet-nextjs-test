@@ -35,4 +35,7 @@ public class AgendaItem
     public Guid AgendaId { get; set; }
 
     public Agenda? Agenda { get; set; }
+
+    public ICollection<AgendaTask> AgendaTasks { get; set; } =
+        new List<AgendaTask>();
 }
