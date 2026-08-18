@@ -5,7 +5,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export interface Agenda {
+export interface AgendaDto {
   id?: string;
   name?: string;
   /** @nullable */

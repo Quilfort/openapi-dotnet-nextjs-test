@@ -4,9 +4,20 @@
  * Backend | v1
  * OpenAPI spec version: 1.0.0
  */
+import type { AgendaDto } from './agendaDto';
 
 export interface AgendaItemDto {
   id?: string;
   name?: string;
+  /** @nullable */
+  description?: string | null;
+  startDate?: string;
+  /** @nullable */
+  endDate?: string | null;
+  /** @nullable */
+  startTime?: string | null;
+  /** @nullable */
+  endTime?: string | null;
   agendaId?: string;
+  agenda?: null | AgendaDto;
 }
