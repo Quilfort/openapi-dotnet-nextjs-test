@@ -61,6 +61,16 @@ public partial class AppDbContext : DbContext
                 .WithMany(e => e.AgendaTasks)
                 .HasForeignKey(e => e.AgendaItemId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Department)
+                .WithMany()
+                .HasForeignKey(e => e.DepartmentId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         OnModelCreatingPartial(modelBuilder);

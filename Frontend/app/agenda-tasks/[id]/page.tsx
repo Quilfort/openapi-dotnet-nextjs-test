@@ -53,6 +53,7 @@ export default async function AgendaTaskPage({
             );
         }
 
+        revalidatePath("/");
         revalidatePath("/agenda-tasks");
         revalidatePath("/agenda-items");
 
@@ -81,18 +82,20 @@ export default async function AgendaTaskPage({
 
                 {/* Content */}
                 <section className="py-16">
-                    <div className="mb-12 flex max-w-3xl items-start justify-between gap-6">
-                        <div>
+                    {/* Task header */}
+                    <div className="mb-12 flex max-w-4xl items-start justify-between gap-8">
+                        <div className="min-w-0">
                             <p className="mb-3 text-sm font-medium text-muted">
                                 Taak
                             </p>
 
                             <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-                                {agendaTask.name}
+                                {agendaTask.name ||
+                                    "Naamloze taak"}
                             </h1>
 
                             {agendaTask.description && (
-                                <p className="mt-6 text-lg leading-8 text-muted">
+                                <p className="mt-6 max-w-3xl text-lg leading-8 text-muted">
                                     {agendaTask.description}
                                 </p>
                             )}
@@ -112,6 +115,7 @@ export default async function AgendaTaskPage({
                     {/* Details */}
                     <div className="max-w-3xl overflow-hidden rounded-2xl border border-border bg-surface">
                         <dl className="divide-y divide-border">
+                            {/* Deadline */}
                             <div className="grid gap-2 px-6 py-5 sm:grid-cols-3 sm:gap-6">
                                 <dt className="text-sm font-medium text-muted">
                                     Deadline
@@ -124,6 +128,7 @@ export default async function AgendaTaskPage({
                                 </dd>
                             </div>
 
+                            {/* Agenda item */}
                             <div className="grid gap-2 px-6 py-5 sm:grid-cols-3 sm:gap-6">
                                 <dt className="text-sm font-medium text-muted">
                                     Agenda item
@@ -135,10 +140,47 @@ export default async function AgendaTaskPage({
                                             href={`/agenda-items/${agendaTask.agendaItem.id}`}
                                             className="font-medium hover:underline"
                                         >
-                                            {agendaTask.agendaItem.name}
+                                            {agendaTask.agendaItem.name ||
+                                                "Naamloos agenda item"}
                                         </Link>
                                     ) : (
-                                        "Onbekend agenda item"
+                                        <span className="text-muted">
+                                            Onbekend agenda item
+                                        </span>
+                                    )}
+                                </dd>
+                            </div>
+
+                            {/* Department */}
+                            <div className="grid gap-2 px-6 py-5 sm:grid-cols-3 sm:gap-6">
+                                <dt className="text-sm font-medium text-muted">
+                                    Afdeling
+                                </dt>
+
+                                <dd className="text-sm text-foreground sm:col-span-2">
+                                    {agendaTask.department ? (
+                                        agendaTask.department.name
+                                    ) : (
+                                        <span className="text-muted">
+                                            Geen afdeling toegewezen
+                                        </span>
+                                    )}
+                                </dd>
+                            </div>
+
+                            {/* User */}
+                            <div className="grid gap-2 px-6 py-5 sm:grid-cols-3 sm:gap-6">
+                                <dt className="text-sm font-medium text-muted">
+                                    Toegewezen aan
+                                </dt>
+
+                                <dd className="text-sm text-foreground sm:col-span-2">
+                                    {agendaTask.user ? (
+                                        agendaTask.user.name
+                                    ) : (
+                                        <span className="text-muted">
+                                            Geen persoon toegewezen
+                                        </span>
                                     )}
                                 </dd>
                             </div>

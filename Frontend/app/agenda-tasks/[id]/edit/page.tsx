@@ -4,8 +4,12 @@ import {
     getApiAgendaTasksId,
     getApiAgendas,
     getApiAgendaItems,
+    getApiDepartments,
+    getApiUsers,
     putApiAgendaTasksId,
 } from "@/generated/api";
+
+import type { AgendaTask } from "@/generated/models";
 
 import AgendaTaskForm from "@/app/components/AgendaTask/AgendaTaskForm";
 import PageHeader from "@/app/components/PageHeader";
@@ -25,10 +29,14 @@ export default async function AgendaTaskEditPage({
         agendaTaskResponse,
         agendasResponse,
         agendaItemsResponse,
+        departmentsResponse,
+        usersResponse,
     ] = await Promise.all([
         getApiAgendaTasksId(id),
         getApiAgendas(),
         getApiAgendaItems(),
+        getApiDepartments(),
+        getApiUsers(),
     ]);
 
     if (agendaTaskResponse.status !== 200) {
@@ -44,6 +52,18 @@ export default async function AgendaTaskEditPage({
     if (agendaItemsResponse.status !== 200) {
         throw new Error(
             "De agenda items konden niet worden opgehaald."
+        );
+    }
+
+    if (departmentsResponse.status !== 200) {
+        throw new Error(
+            "De afdelingen konden niet worden opgehaald."
+        );
+    }
+
+    if (usersResponse.status !== 200) {
+        throw new Error(
+            "De gebruikers konden niet worden opgehaald."
         );
     }
 
@@ -71,10 +91,31 @@ export default async function AgendaTaskEditPage({
             )
     );
 
+    const departments = [
+        ...departmentsResponse.data,
+    ].sort((a, b) =>
+        (a.name ?? "").localeCompare(
+            b.name ?? "",
+            "nl",
+            {
+                sensitivity: "base",
+            }
+        )
+    );
+
+    const users = [...usersResponse.data].sort(
+        (a, b) =>
+            (a.name ?? "").localeCompare(
+                b.name ?? "",
+                "nl",
+                {
+                    sensitivity: "base",
+                }
+            )
+    );
+
     async function updateAgendaTask(
-        updatedAgendaTask: Parameters<
-            typeof putApiAgendaTasksId
-        >[1]
+        updatedAgendaTask: AgendaTask
     ) {
         "use server";
 
@@ -84,6 +125,11 @@ export default async function AgendaTaskEditPage({
         );
 
         if (response.status !== 204) {
+            console.error(
+                "Agenda task update failed:",
+                response.data
+            );
+
             throw new Error(
                 "De taak kon niet worden bijgewerkt."
             );
@@ -98,7 +144,10 @@ export default async function AgendaTaskEditPage({
                 <section className="py-16">
                     <PageHeader
                         eyebrow="Taak bewerken"
-                        title={agendaTask.name}
+                        title={
+                            agendaTask.name ??
+                            "Taak bewerken"
+                        }
                         description="Pas de gegevens van deze taak aan."
                     />
 
@@ -106,6 +155,8 @@ export default async function AgendaTaskEditPage({
                         <AgendaTaskForm
                             agendas={agendas}
                             agendaItems={agendaItems}
+                            departments={departments}
+                            users={users}
                             initialData={agendaTask}
                             onSubmit={updateAgendaTask}
                             submitLabel="Wijzigingen opslaan"

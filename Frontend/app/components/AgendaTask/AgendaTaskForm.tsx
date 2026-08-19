@@ -3,15 +3,20 @@
 import { FormEvent, useMemo, useState } from "react";
 
 import type {
-    Agenda,
-    AgendaItem,
+    AgendaDto,
+    AgendaItemDto,
     AgendaTask,
+    AgendaTaskDto,
+    DepartmentDto,
+    UserDto,
 } from "@/generated/models";
 
 type AgendaTaskFormProps = {
-    agendas: Agenda[];
-    agendaItems: AgendaItem[];
-    initialData?: AgendaTask;
+    agendas: AgendaDto[];
+    agendaItems: AgendaItemDto[];
+    departments: DepartmentDto[];
+    users: UserDto[];
+    initialData?: AgendaTaskDto;
     onSubmit: (agendaTask: AgendaTask) => Promise<void>;
     submitLabel?: string;
 };
@@ -19,6 +24,8 @@ type AgendaTaskFormProps = {
 export default function AgendaTaskForm({
     agendas,
     agendaItems,
+    departments,
+    users,
     initialData,
     onSubmit,
     submitLabel = "Taak aanmaken",
@@ -43,6 +50,14 @@ export default function AgendaTaskForm({
         initialData?.deadlineDate ?? ""
     );
 
+    const [departmentId, setDepartmentId] = useState(
+        initialData?.departmentId ?? ""
+    );
+
+    const [userId, setUserId] = useState(
+        initialData?.userId ?? ""
+    );
+
     const [isSubmitting, setIsSubmitting] =
         useState(false);
 
@@ -63,9 +78,6 @@ export default function AgendaTaskForm({
 
     function handleAgendaChange(value: string) {
         setAgendaId(value);
-
-        // Een agenda wijziging maakt het eerder
-        // geselecteerde agenda item ongeldig.
         setAgendaItemId("");
     }
 
@@ -76,7 +88,9 @@ export default function AgendaTaskForm({
 
         setError(null);
 
-        if (!name.trim()) {
+        const trimmedName = name.trim();
+
+        if (!trimmedName) {
             setError("Naam is verplicht.");
             return;
         }
@@ -99,24 +113,31 @@ export default function AgendaTaskForm({
         const agendaTask: AgendaTask = {
             ...(initialData?.id
                 ? {
-                      id: initialData.id,
-                  }
+                    id: initialData.id,
+                }
                 : {}),
-            name: name.trim(),
-            description:
-                description.trim() || null,
+            name: trimmedName,
+            description: description.trim() || null,
             deadlineDate,
             agendaItemId,
+            departmentId: departmentId || null,
+            userId: userId || null,
         };
 
         try {
             setIsSubmitting(true);
 
             await onSubmit(agendaTask);
-        } catch {
+        } catch (error) {
+            console.error(
+                "Agenda task submission failed:",
+                error
+            );
+
             setError(
                 "Er is iets misgegaan bij het opslaan van de taak."
             );
+
             setIsSubmitting(false);
         }
     }
@@ -134,8 +155,8 @@ export default function AgendaTaskForm({
                     </h2>
 
                     <p className="mt-1 text-sm text-muted">
-                        Kies eerst de agenda en daarna het agenda
-                        item waaraan deze taak gekoppeld wordt.
+                        Kies de agenda en het agenda item
+                        waaraan deze taak gekoppeld wordt.
                     </p>
                 </div>
 
@@ -200,8 +221,8 @@ export default function AgendaTaskForm({
                                 {!agendaId
                                     ? "Selecteer eerst een agenda"
                                     : filteredAgendaItems.length === 0
-                                      ? "Geen agenda items"
-                                      : "Selecteer een agenda item"}
+                                        ? "Geen agenda items"
+                                        : "Selecteer een agenda item"}
                             </option>
 
                             {filteredAgendaItems.map(
@@ -298,6 +319,74 @@ export default function AgendaTaskForm({
                             required
                             className="mt-2 w-full rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
                         />
+                    </div>
+
+                    {/* Department */}
+                    <div>
+                        <label
+                            htmlFor="department"
+                            className="block text-sm font-medium text-foreground"
+                        >
+                            Afdeling
+                        </label>
+
+                        <select
+                            id="department"
+                            value={departmentId}
+                            onChange={(event) =>
+                                setDepartmentId(
+                                    event.target.value
+                                )
+                            }
+                            className="mt-2 w-full rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+                        >
+                            <option value="">
+                                Geen afdeling
+                            </option>
+
+                            {departments.map((department) => (
+                                <option
+                                    key={department.id}
+                                    value={department.id}
+                                >
+                                    {department.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* User */}
+                    <div>
+                        <label
+                            htmlFor="user"
+                            className="block text-sm font-medium text-foreground"
+                        >
+                            Gebruiker
+                        </label>
+
+                        <select
+                            id="user"
+                            value={userId}
+                            onChange={(event) =>
+                                setUserId(
+                                    event.target.value
+                                )
+                            }
+                            className="mt-2 w-full rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+                        >
+                            <option value="">
+                                Geen gebruiker
+                            </option>
+
+                            {users.map((user) => (
+                                <option
+                                    key={user.id}
+                                    value={user.id}
+                                >
+                                    {user.name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                 </div>
             </div>

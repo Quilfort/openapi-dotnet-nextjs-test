@@ -26,4 +26,14 @@ public class AgendaTask
     public Guid AgendaItemId { get; set; }
 
     public AgendaItem? AgendaItem { get; set; }
+
+    [Column("department_id")]
+    public Guid? DepartmentId { get; set; }
+
+    public Department? Department { get; set; }
+
+    [Column("user_id")]
+    public Guid? UserId { get; set; }
+
+    public User? User { get; set; }
 }

@@ -36,6 +36,28 @@ public class AgendaTaskController : ControllerBase
                         Id = e.AgendaItem.Id,
                         Name = e.AgendaItem.Name,
                         AgendaId = e.AgendaItem.AgendaId
+                    },
+
+                DepartmentId = e.DepartmentId,
+
+                Department = e.Department == null
+                    ? null
+                    : new DepartmentDto
+                    {
+                        Id = e.Department.Id,
+                        Name = e.Department.Name
+                    },
+
+                UserId = e.UserId,
+
+                User = e.User == null
+                    ? null
+                    : new UserDto
+                    {
+                        Id = e.User.Id,
+                        Name = e.User.Name,
+                        Email = e.User.Email,
+                        DepartmentId = e.User.DepartmentId
                     }
             })
             .ToListAsync();
@@ -65,6 +87,28 @@ public class AgendaTaskController : ControllerBase
                         Id = e.AgendaItem.Id,
                         Name = e.AgendaItem.Name,
                         AgendaId = e.AgendaItem.AgendaId
+                    },
+
+                DepartmentId = e.DepartmentId,
+
+                Department = e.Department == null
+                    ? null
+                    : new DepartmentDto
+                    {
+                        Id = e.Department.Id,
+                        Name = e.Department.Name
+                    },
+
+                UserId = e.UserId,
+
+                User = e.User == null
+                    ? null
+                    : new UserDto
+                    {
+                        Id = e.User.Id,
+                        Name = e.User.Name,
+                        Email = e.User.Email,
+                        DepartmentId = e.User.DepartmentId
                     }
             })
             .FirstOrDefaultAsync();
@@ -81,10 +125,10 @@ public class AgendaTaskController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<AgendaTaskDto>> CreateAgendaTask(
-        AgendaTaskDto agendaTaskDto)
+        AgendaTask agendaTask)
     {
         var agendaItemExists = await _context.AgendaItems
-            .AnyAsync(e => e.Id == agendaTaskDto.AgendaItemId);
+            .AnyAsync(e => e.Id == agendaTask.AgendaItemId);
 
         if (!agendaItemExists)
         {
@@ -93,20 +137,52 @@ public class AgendaTaskController : ControllerBase
             );
         }
 
-        var agendaTask = new AgendaTask
-        {
-            Id = agendaTaskDto.Id == Guid.Empty
-                ? Guid.NewGuid()
-                : agendaTaskDto.Id,
+        var departmentExists = true;
 
-            Name = agendaTaskDto.Name,
-            Description = agendaTaskDto.Description,
-            DeadlineDate = agendaTaskDto.DeadlineDate,
-            AgendaItemId = agendaTaskDto.AgendaItemId
-        };
+        if (agendaTask.DepartmentId.HasValue)
+        {
+            departmentExists = await _context.Departments
+                .AnyAsync(e => e.Id == agendaTask.DepartmentId.Value);
+
+            if (!departmentExists)
+            {
+                return BadRequest(
+                    "The specified department does not exist."
+                );
+            }
+        }
+
+        if (agendaTask.UserId.HasValue)
+        {
+            var user = await _context.Users
+                .Where(e => e.Id == agendaTask.UserId.Value)
+                .Select(e => new
+                {
+                    e.Id,
+                    e.DepartmentId
+                })
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return BadRequest(
+                    "The specified user does not exist."
+                );
+            }
+
+            if (!agendaTask.DepartmentId.HasValue)
+            {
+                agendaTask.DepartmentId = user.DepartmentId;
+            }
+            else if (user.DepartmentId != agendaTask.DepartmentId)
+            {
+                return BadRequest(
+                    "The specified user does not belong to the specified department."
+                );
+            }
+        }
 
         _context.AgendaTasks.Add(agendaTask);
-
         await _context.SaveChangesAsync();
 
         var createdAgendaTask = await _context.AgendaTasks
@@ -126,6 +202,28 @@ public class AgendaTaskController : ControllerBase
                         Id = e.AgendaItem.Id,
                         Name = e.AgendaItem.Name,
                         AgendaId = e.AgendaItem.AgendaId
+                    },
+
+                DepartmentId = e.DepartmentId,
+
+                Department = e.Department == null
+                    ? null
+                    : new DepartmentDto
+                    {
+                        Id = e.Department.Id,
+                        Name = e.Department.Name
+                    },
+
+                UserId = e.UserId,
+
+                User = e.User == null
+                    ? null
+                    : new UserDto
+                    {
+                        Id = e.User.Id,
+                        Name = e.User.Name,
+                        Email = e.User.Email,
+                        DepartmentId = e.User.DepartmentId
                     }
             })
             .FirstAsync();
@@ -142,15 +240,23 @@ public class AgendaTaskController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateAgendaTask(
         Guid id,
-        AgendaTaskDto agendaTaskDto)
+        AgendaTask agendaTask)
     {
-        if (id != agendaTaskDto.Id)
+        if (id != agendaTask.Id)
         {
             return BadRequest();
         }
 
+        var agendaTaskExists = await _context.AgendaTasks
+            .AnyAsync(e => e.Id == id);
+
+        if (!agendaTaskExists)
+        {
+            return NotFound();
+        }
+
         var agendaItemExists = await _context.AgendaItems
-            .AnyAsync(e => e.Id == agendaTaskDto.AgendaItemId);
+            .AnyAsync(e => e.Id == agendaTask.AgendaItemId);
 
         if (!agendaItemExists)
         {
@@ -159,20 +265,65 @@ public class AgendaTaskController : ControllerBase
             );
         }
 
-        var agendaTask = await _context.AgendaTasks
-            .FindAsync(id);
-
-        if (agendaTask == null)
+        if (agendaTask.DepartmentId.HasValue)
         {
-            return NotFound();
+            var departmentExists = await _context.Departments
+                .AnyAsync(e => e.Id == agendaTask.DepartmentId.Value);
+
+            if (!departmentExists)
+            {
+                return BadRequest(
+                    "The specified department does not exist."
+                );
+            }
         }
 
-        agendaTask.Name = agendaTaskDto.Name;
-        agendaTask.Description = agendaTaskDto.Description;
-        agendaTask.DeadlineDate = agendaTaskDto.DeadlineDate;
-        agendaTask.AgendaItemId = agendaTaskDto.AgendaItemId;
+        if (agendaTask.UserId.HasValue)
+        {
+            var user = await _context.Users
+                .Where(e => e.Id == agendaTask.UserId.Value)
+                .Select(e => new
+                {
+                    e.Id,
+                    e.DepartmentId
+                })
+                .FirstOrDefaultAsync();
 
-        await _context.SaveChangesAsync();
+            if (user == null)
+            {
+                return BadRequest(
+                    "The specified user does not exist."
+                );
+            }
+
+            if (!agendaTask.DepartmentId.HasValue)
+            {
+                agendaTask.DepartmentId = user.DepartmentId;
+            }
+            else if (user.DepartmentId != agendaTask.DepartmentId)
+            {
+                return BadRequest(
+                    "The specified user does not belong to the specified department."
+                );
+            }
+        }
+
+        _context.Entry(agendaTask).State =
+            EntityState.Modified;
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!await _context.AgendaTasks.AnyAsync(e => e.Id == id))
+            {
+                return NotFound();
+            }
+
+            throw;
+        }
 
         return NoContent();
     }
@@ -182,7 +333,8 @@ public class AgendaTaskController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteAgendaTask(Guid id)
     {
-        var agendaTask = await _context.AgendaTasks.FindAsync(id);
+        var agendaTask = await _context.AgendaTasks
+            .FindAsync(id);
 
         if (agendaTask == null)
         {
@@ -190,7 +342,6 @@ public class AgendaTaskController : ControllerBase
         }
 
         _context.AgendaTasks.Remove(agendaTask);
-
         await _context.SaveChangesAsync();
 
         return NoContent();

@@ -6,10 +6,10 @@ type AgendaTask = Awaited<
     ReturnType<typeof getApiAgendaTasks>
 > extends infer Response
     ? Response extends { status: 200; data: infer Data }
-    ? Data extends readonly (infer Task)[]
-    ? Task
-    : never
-    : never
+        ? Data extends readonly (infer Task)[]
+            ? Task
+            : never
+        : never
     : never;
 
 type AgendaTaskListProps = {
@@ -57,7 +57,7 @@ export default function AgendaTaskList({
     return (
         <div className="overflow-hidden rounded-2xl border border-border bg-surface">
             <div className="overflow-x-auto">
-                <table className="w-full min-w-[700px] border-collapse text-left">
+                <table className="w-full min-w-[900px] border-collapse text-left">
                     <thead>
                         <tr className="border-b border-border text-sm text-muted">
                             <th className="px-6 py-4 font-medium">
@@ -77,6 +77,14 @@ export default function AgendaTaskList({
                                     Agenda item
                                 </th>
                             )}
+
+                            <th className="px-6 py-4 font-medium">
+                                Afdeling
+                            </th>
+
+                            <th className="px-6 py-4 font-medium">
+                                Medewerker
+                            </th>
                         </tr>
                     </thead>
 
@@ -86,6 +94,7 @@ export default function AgendaTaskList({
                                 key={agendaTask.id}
                                 className="border-b border-border last:border-b-0 transition-colors hover:bg-background"
                             >
+                                {/* Taak */}
                                 <td className="px-6 py-5">
                                     <Link
                                         href={`/agenda-tasks/${agendaTask.id}`}
@@ -96,18 +105,21 @@ export default function AgendaTaskList({
                                     </Link>
                                 </td>
 
+                                {/* Beschrijving */}
                                 <td className="max-w-md px-6 py-5">
                                     <span className="line-clamp-2 text-sm text-muted">
                                         {agendaTask.description || "—"}
                                     </span>
                                 </td>
 
+                                {/* Deadline */}
                                 <td className="whitespace-nowrap px-6 py-5 text-sm text-foreground">
                                     {formatDeadline(
                                         agendaTask.deadlineDate
                                     )}
                                 </td>
 
+                                {/* Agenda item */}
                                 {showAgendaItem && (
                                     <td className="px-6 py-5">
                                         {agendaTask.agendaItem ? (
@@ -128,6 +140,40 @@ export default function AgendaTaskList({
                                         )}
                                     </td>
                                 )}
+
+                                {/* Afdeling */}
+                                <td className="px-6 py-5">
+                                    {agendaTask.department ? (
+                                        <Link
+                                            href={`/settings/departments/${agendaTask.department.id}`}
+                                            className="text-sm font-medium text-foreground hover:underline"
+                                        >
+                                            {agendaTask.department.name ||
+                                                "Naamloze afdeling"}
+                                        </Link>
+                                    ) : (
+                                        <span className="text-sm text-muted">
+                                            —
+                                        </span>
+                                    )}
+                                </td>
+
+                                {/* Medewerker */}
+                                <td className="px-6 py-5">
+                                    {agendaTask.user ? (
+                                        <Link
+                                            href={`/settings/users/${agendaTask.user.id}`}
+                                            className="text-sm font-medium text-foreground hover:underline"
+                                        >
+                                            {agendaTask.user.name ||
+                                                "Naamloze medewerker"}
+                                        </Link>
+                                    ) : (
+                                        <span className="text-sm text-muted">
+                                            —
+                                        </span>
+                                    )}
+                                </td>
                             </tr>
                         ))}
                     </tbody>

@@ -8,13 +8,9 @@
 export interface UserDto {
   id?: string;
   /** @nullable */
-  entraUserId?: string | null;
-  /** @nullable */
-  role?: string | null;
+  name?: string | null;
   /** @nullable */
   email?: string | null;
-  /** @nullable */
-  name?: string | null;
   /** @nullable */
   departmentId?: string | null;
 }

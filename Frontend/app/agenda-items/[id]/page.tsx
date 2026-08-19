@@ -91,6 +91,13 @@ export default async function AgendaItemPage({
 
     const agendaItem = agendaItemResponse.data;
 
+    /*
+     * AgendaTaskList werkt met de DTO's die rechtstreeks
+     * uit de generated API komen.
+     *
+     * We hoeven hier dus geen AgendaTask te construeren.
+     * We filteren alleen op het huidige agenda item.
+     */
     const agendaTasks = agendaTasksResponse.data.filter(
         (agendaTask) =>
             agendaTask.agendaItemId === id
@@ -107,6 +114,10 @@ export default async function AgendaItemPage({
             );
         }
 
+        /*
+         * De verschillende pagina's die afhankelijk zijn
+         * van agenda items/taken opnieuw laten ophalen.
+         */
         revalidatePath("/");
         revalidatePath("/agenda-items");
         revalidatePath("/agenda-tasks");

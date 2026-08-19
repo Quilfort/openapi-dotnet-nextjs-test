@@ -4,14 +4,17 @@ const navigation = [
     {
         name: "Home",
         href: "/",
+        disabled: false,
     },
     {
         name: "Kalender",
         href: "/agenda-items",
+        disabled: false,
     },
     {
         name: "Agenda's",
         href: "/agendas",
+        disabled: false,
     },
     {
         name: "Taken",

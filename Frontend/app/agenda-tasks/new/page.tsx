@@ -4,17 +4,27 @@ import { redirect } from "next/navigation";
 import {
     getApiAgendas,
     getApiAgendaItems,
+    getApiDepartments,
+    getApiUsers,
     postApiAgendaTasks,
 } from "@/generated/api";
+
+import type { AgendaTask } from "@/generated/models";
 
 import AgendaTaskForm from "@/app/components/AgendaTask/AgendaTaskForm";
 
 export default async function NewAgendaTaskPage() {
-    const [agendasResponse, agendaItemsResponse] =
-        await Promise.all([
-            getApiAgendas(),
-            getApiAgendaItems(),
-        ]);
+    const [
+        agendasResponse,
+        agendaItemsResponse,
+        departmentsResponse,
+        usersResponse,
+    ] = await Promise.all([
+        getApiAgendas(),
+        getApiAgendaItems(),
+        getApiDepartments(),
+        getApiUsers(),
+    ]);
 
     if (agendasResponse.status !== 200) {
         throw new Error(
@@ -28,14 +38,27 @@ export default async function NewAgendaTaskPage() {
         );
     }
 
-    const agendas = [...agendasResponse.data].sort((a, b) =>
-        (a.name ?? "").localeCompare(
-            b.name ?? "",
-            "nl",
-            {
-                sensitivity: "base",
-            }
-        )
+    if (departmentsResponse.status !== 200) {
+        throw new Error(
+            "De afdelingen konden niet worden opgehaald."
+        );
+    }
+
+    if (usersResponse.status !== 200) {
+        throw new Error(
+            "De gebruikers konden niet worden opgehaald."
+        );
+    }
+
+    const agendas = [...agendasResponse.data].sort(
+        (a, b) =>
+            (a.name ?? "").localeCompare(
+                b.name ?? "",
+                "nl",
+                {
+                    sensitivity: "base",
+                }
+            )
     );
 
     const agendaItems = [...agendaItemsResponse.data].sort(
@@ -49,10 +72,31 @@ export default async function NewAgendaTaskPage() {
             )
     );
 
+    const departments = [
+        ...departmentsResponse.data,
+    ].sort((a, b) =>
+        (a.name ?? "").localeCompare(
+            b.name ?? "",
+            "nl",
+            {
+                sensitivity: "base",
+            }
+        )
+    );
+
+    const users = [...usersResponse.data].sort(
+        (a, b) =>
+            (a.name ?? "").localeCompare(
+                b.name ?? "",
+                "nl",
+                {
+                    sensitivity: "base",
+                }
+            )
+    );
+
     async function createAgendaTask(
-        agendaTask: Parameters<
-            typeof postApiAgendaTasks
-        >[0]
+        agendaTask: AgendaTask
     ) {
         "use server";
 
@@ -79,7 +123,6 @@ export default async function NewAgendaTaskPage() {
     return (
         <main className="min-h-screen">
             <div className="mx-auto max-w-6xl px-6 py-8 sm:px-8 lg:px-12">
-                {/* Header */}
                 <header className="flex items-center justify-between border-b border-border pb-6">
                     <Link
                         href="/"
@@ -96,7 +139,6 @@ export default async function NewAgendaTaskPage() {
                     </Link>
                 </header>
 
-                {/* Content */}
                 <section className="py-16">
                     <div className="mb-10 max-w-3xl">
                         <p className="mb-3 text-sm font-medium text-muted">
@@ -116,6 +158,8 @@ export default async function NewAgendaTaskPage() {
                     <AgendaTaskForm
                         agendas={agendas}
                         agendaItems={agendaItems}
+                        departments={departments}
+                        users={users}
                         onSubmit={createAgendaTask}
                         submitLabel="Taak aanmaken"
                     />

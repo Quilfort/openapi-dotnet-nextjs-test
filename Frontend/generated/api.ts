@@ -7,6 +7,7 @@
 import type {
   AgendaDto,
   AgendaItemDto,
+  AgendaTask,
   AgendaTaskDto,
   Department,
   DepartmentDto,
@@ -741,14 +742,14 @@ export const getPostApiAgendaTasksUrl = () => {
   return `https://localhost:7229/api/agenda-tasks`
 }
 
-export const postApiAgendaTasks = async (agendaTaskDto: AgendaTaskDto, options?: RequestInit): Promise<postApiAgendaTasksResponse> => {
+export const postApiAgendaTasks = async (agendaTask: AgendaTask, options?: RequestInit): Promise<postApiAgendaTasksResponse> => {
 
   const res = await fetch(getPostApiAgendaTasksUrl(),
   {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(agendaTaskDto)
+    body: JSON.stringify(agendaTask)
   }
 )
 
@@ -881,14 +882,14 @@ export const getPutApiAgendaTasksIdUrl = (id: string,) => {
 }
 
 export const putApiAgendaTasksId = async (id: string,
-    agendaTaskDto: AgendaTaskDto, options?: RequestInit): Promise<putApiAgendaTasksIdResponse> => {
+    agendaTask: AgendaTask, options?: RequestInit): Promise<putApiAgendaTasksIdResponse> => {
 
   const res = await fetch(getPutApiAgendaTasksIdUrl(id),
   {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(agendaTaskDto)
+    body: JSON.stringify(agendaTask)
   }
 )
 
