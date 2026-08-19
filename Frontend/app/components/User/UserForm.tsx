@@ -151,7 +151,7 @@ export default function UserForm({
                             onChange={(event) =>
                                 setEmail(event.target.value)
                             }
-                            placeholder="naam@gemeente.nl"
+                            placeholder="naam@quilfort.nl"
                             required
                             className="mt-2 w-full rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
                         />
