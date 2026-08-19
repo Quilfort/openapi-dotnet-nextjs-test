@@ -6,7 +6,7 @@ import {
     postApiAgendaItems,
 } from "@/generated/api";
 
-import AgendaItemForm from "@/app/components/AgendaItemForm";
+import AgendaItemForm from "@/app/components/AgendaItem/AgendaItemForm";
 
 export default async function NewAgendaItemPage() {
     const response = await getApiAgendas();

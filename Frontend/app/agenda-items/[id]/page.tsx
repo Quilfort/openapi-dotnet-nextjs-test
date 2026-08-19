@@ -10,7 +10,7 @@ import {
 
 import EditButton from "@/app/components/EditButton";
 import DeleteButton from "@/app/components/DeleteButton";
-import AgendaTaskList from "@/app/components/AgendaTaskList";
+import AgendaTaskList from "@/app/components/AgendaTask/AgendaTaskList";
 
 function formatDateRange(
     startDate?: string,

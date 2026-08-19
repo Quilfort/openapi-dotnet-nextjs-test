@@ -1,7 +1,7 @@
 import { getApiAgendaTasks } from "@/generated/api";
 
 import CreateButton from "@/app/components/CreateButton";
-import AgendaTaskList from "@/app/components/AgendaTaskList";
+import AgendaTaskList from "@/app/components/AgendaTask/AgendaTaskList";
 
 export default async function AgendaTasksPage() {
     const response = await getApiAgendaTasks();

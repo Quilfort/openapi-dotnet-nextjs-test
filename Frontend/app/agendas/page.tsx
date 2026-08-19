@@ -1,6 +1,6 @@
 import { getApiAgendas } from "@/generated/api";
 
-import AgendaCard from "@/app/components/AgendaCard";
+import AgendaCard from "@/app/components/Agenda/AgendaCard";
 import CreateButton from "@/app/components/CreateButton";
 import PageHeader from "@/app/components/PageHeader";
 

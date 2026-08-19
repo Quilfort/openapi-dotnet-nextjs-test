@@ -1,7 +1,7 @@
 import { getApiAgendaItems } from "@/generated/api";
 
 import CreateButton from "@/app/components/CreateButton";
-import AgendaItemList from "@/app/components/AgendaItemList";
+import AgendaItemList from "@/app/components/AgendaItem/AgendaItemList";
 import PageHeader from "@/app/components/PageHeader";
 
 export default async function AgendaItemsPage() {
