@@ -13,4 +13,12 @@ public class AgendaTaskDto
     public Guid AgendaItemId { get; set; }
 
     public AgendaItemDto? AgendaItem { get; set; }
+
+    public Guid? DepartmentId { get; set; }
+
+    public DepartmentDto? Department { get; set; }
+
+    public Guid? UserId { get; set; }
+
+    public UserDto? User { get; set; }
 }
