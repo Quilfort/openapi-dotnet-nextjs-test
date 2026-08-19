@@ -5,6 +5,8 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { AgendaItemDto } from './agendaItemDto';
+import type { DepartmentDto } from './departmentDto';
+import type { UserDto } from './userDto';
 
 export interface AgendaTaskDto {
   id?: string;
@@ -14,4 +16,10 @@ export interface AgendaTaskDto {
   deadlineDate?: string;
   agendaItemId?: string;
   agendaItem?: null | AgendaItemDto;
+  /** @nullable */
+  departmentId?: string | null;
+  department?: null | DepartmentDto;
+  /** @nullable */
+  userId?: string | null;
+  user?: null | UserDto;
 }
