@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { postApiAgendas } from "@/generated/api";
-import AgendaForm from "@/app/components/AgendaForm";
+import AgendaForm from "@/app/components/Agenda/AgendaForm";
 import PageHeader from "@/app/components/PageHeader";
 
 export default function NewAgendaPage() {

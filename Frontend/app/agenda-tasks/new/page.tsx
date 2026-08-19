@@ -7,7 +7,7 @@ import {
     postApiAgendaTasks,
 } from "@/generated/api";
 
-import AgendaTaskForm from "@/app/components/AgendaTaskForm";
+import AgendaTaskForm from "@/app/components/AgendaTask/AgendaTaskForm";
 
 export default async function NewAgendaTaskPage() {
     const [agendasResponse, agendaItemsResponse] =

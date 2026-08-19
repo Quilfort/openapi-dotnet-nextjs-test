@@ -7,7 +7,7 @@ import {
     putApiAgendaItemsId,
 } from "@/generated/api";
 
-import AgendaItemForm from "@/app/components/AgendaItemForm";
+import AgendaItemForm from "@/app/components/AgendaItem/AgendaItemForm";
 
 type AgendaItemEditPageProps = {
     params: Promise<{

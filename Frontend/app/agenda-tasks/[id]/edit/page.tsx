@@ -7,7 +7,7 @@ import {
     putApiAgendaTasksId,
 } from "@/generated/api";
 
-import AgendaTaskForm from "@/app/components/AgendaTaskForm";
+import AgendaTaskForm from "@/app/components/AgendaTask/AgendaTaskForm";
 import PageHeader from "@/app/components/PageHeader";
 
 type AgendaTaskEditPageProps = {

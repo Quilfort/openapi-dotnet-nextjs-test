@@ -10,7 +10,7 @@ import {
 
 import EditButton from "@/app/components/EditButton";
 import DeleteButton from "@/app/components/DeleteButton";
-import AgendaItemList from "@/app/components/AgendaItemList";
+import AgendaItemList from "@/app/components/AgendaItem/AgendaItemList";
 
 type AgendaPageProps = {
     params: Promise<{
