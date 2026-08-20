@@ -1,24 +1,58 @@
-import { getApiAgendaItems } from "@/generated/api";
+import { getApiAgendaItems, getApiAgendas } from "@/generated/api";
 
 import CreateButton from "@/app/components/CreateButton";
 import AgendaItemList from "@/app/components/AgendaItem/AgendaItemList";
+import AgendaFilter from "@/app/components/Agenda/AgendaFilter";
 import PageHeader from "@/app/components/PageHeader";
 
-export default async function AgendaItemsPage() {
-    const response = await getApiAgendaItems();
+type AgendaItemsPageProps = {
+    searchParams: Promise<{
+        agenda?: string;
+    }>;
+};
 
-    if (response.status !== 200) {
+export default async function AgendaItemsPage({
+    searchParams,
+}: AgendaItemsPageProps) {
+    const { agenda: selectedAgenda } =
+        await searchParams;
+
+    const [agendaItemsResponse, agendasResponse] =
+        await Promise.all([
+            getApiAgendaItems(),
+            getApiAgendas(),
+        ]);
+
+    if (agendaItemsResponse.status !== 200) {
         throw new Error(
             "Agenda items konden niet worden opgehaald."
         );
     }
 
-    const agendaItems = [...response.data];
+    if (agendasResponse.status !== 200) {
+        throw new Error(
+            "Agenda's konden niet worden opgehaald."
+        );
+    }
+
+    const agendas = [...agendasResponse.data];
+
+    const agendaItems = agendaItemsResponse.data.filter(
+        (agendaItem) => {
+            if (!selectedAgenda) {
+                return true;
+            }
+
+            return (
+                agendaItem.agendaId === selectedAgenda
+            );
+        }
+    );
 
     return (
         <main className="min-h-full">
             <div className="mx-auto max-w-6xl px-6 py-10 sm:px-8 lg:px-12">
-                {/* Page header */}
+                {/* Header */}
                 <section>
                     <div className="flex items-end justify-between gap-6">
                         <PageHeader
@@ -33,25 +67,34 @@ export default async function AgendaItemsPage() {
                     </div>
                 </section>
 
-                {/* Agenda items */}
-                <section className="mt-12">
-                    <div className="mb-5 flex items-center justify-between">
+                {/* Toolbar */}
+                <section className="mt-10">
+                    <div className="flex flex-col gap-4 rounded-xl border border-border bg-surface px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
                         <div>
-                            <h2 className="text-sm font-semibold text-foreground">
-                                Alle agenda items
-                            </h2>
+                            <p className="text-sm font-semibold text-foreground">
+                                Agenda items
+                            </p>
 
-                            <p className="mt-1 text-sm text-muted">
+                            <p className="mt-0.5 text-xs text-muted">
                                 {agendaItems.length}{" "}
                                 {agendaItems.length === 1
                                     ? "item"
                                     : "items"}{" "}
-                                gepland
+                                weergegeven
                             </p>
                         </div>
-                    </div>
 
-                    <AgendaItemList agendaItems={agendaItems} />
+                        <AgendaFilter
+                            agendas={agendas}
+                        />
+                    </div>
+                </section>
+
+                {/* Results */}
+                <section className="mt-6">
+                    <AgendaItemList
+                        agendaItems={agendaItems}
+                    />
                 </section>
             </div>
         </main>

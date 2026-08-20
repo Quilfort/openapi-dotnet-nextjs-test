@@ -1,16 +1,14 @@
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { notFound } from "next/navigation";
 
 import {
-    deleteApiAgendasId,
-    getApiAgendasId,
     getApiAgendaItems,
+    getApiAgendasId,
 } from "@/generated/api";
 
-import EditButton from "@/app/components/EditButton";
-import DeleteButton from "@/app/components/DeleteButton";
 import AgendaItemList from "@/app/components/AgendaItem/AgendaItemList";
+import EditButton from "@/app/components/EditButton";
+import PageHeader from "@/app/components/PageHeader";
 
 type AgendaPageProps = {
     params: Promise<{
@@ -18,7 +16,7 @@ type AgendaPageProps = {
     }>;
 };
 
-export default async function AgendaPage({
+export default async function SettingsAgendaPage({
     params,
 }: AgendaPageProps) {
     const { id } = await params;
@@ -35,115 +33,94 @@ export default async function AgendaPage({
 
     if (agendaItemsResponse.status !== 200) {
         throw new Error(
-            "De agenda items konden niet worden opgehaald."
+            "Agenda items konden niet worden opgehaald."
         );
     }
 
     const agenda = agendaResponse.data;
 
-    const agendaItems = agendaItemsResponse.data.filter(
-        (agendaItem) => agendaItem.agendaId === id
-    );
-
-    const hasAgendaItems = agendaItems.length > 0;
-
-    const deleteTitle = hasAgendaItems
-        ? "Agenda en agenda items verwijderen?"
-        : "Agenda verwijderen?";
-
-    const deleteDescription = hasAgendaItems
-        ? `Deze agenda heeft ${agendaItems.length} ${
-              agendaItems.length === 1
-                  ? "agenda item"
-                  : "agenda items"
-          }. Als je deze agenda verwijdert, worden ook alle gekoppelde agenda items verwijderd. Deze actie kan niet ongedaan worden.`
-        : "Weet je zeker dat je deze agenda wilt verwijderen? Deze actie kan niet ongedaan worden.";
-
-    async function deleteAgenda() {
-        "use server";
-
-        const response = await deleteApiAgendasId(id);
-
-        if (response.status !== 204) {
-            throw new Error(
-                "De agenda kon niet worden verwijderd."
-            );
-        }
-
-        revalidatePath("/settings/agendas");
-        revalidatePath("/settings/agenda-items");
-
-        redirect("/settings/agendas");
-    }
+    const agendaItems =
+        agendaItemsResponse.data.filter(
+            (agendaItem) =>
+                agendaItem.agendaId === id
+        );
 
     return (
         <main className="min-h-full">
             <div className="mx-auto max-w-6xl px-6 py-10 sm:px-8 lg:px-12">
-
-                {/* Back navigation */}
+                {/* Breadcrumb */}
                 <Link
                     href="/settings/agendas"
-                    className="inline-flex min-h-10 items-center text-sm font-medium text-muted transition-colors hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
+                    className="text-sm font-medium text-muted transition-colors hover:text-foreground"
                 >
-                    ← Alle agenda&apos;s
+                    ← Agenda's
                 </Link>
 
-                {/* Resource header */}
+                {/* Header */}
+                <section className="mt-8">
+                    <div className="flex items-start justify-between gap-6">
+                        <PageHeader
+                            eyebrow="Instellingen · Agenda"
+                            title={
+                                agenda.name ||
+                                "Naamloze agenda"
+                            }
+                            description={
+                                agenda.description ||
+                                "Beheer deze agenda en bekijk de gekoppelde agenda items."
+                            }
+                        />
+
+                        <EditButton
+                            href={`/settings/agendas/${id}/edit`}
+                        />
+                    </div>
+                </section>
+
+                {/* Overview */}
                 <section className="mt-10">
-                    <div className="flex max-w-5xl items-start justify-between gap-8">
-                        <div className="min-w-0">
-                            <p className="text-sm font-medium text-accent">
-                                Agenda
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="rounded-xl border border-border bg-surface px-5 py-4">
+                            <p className="text-xs font-medium uppercase tracking-wide text-muted">
+                                Agenda items
                             </p>
 
-                            <h1 className="mt-2 text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-                                {agenda.name}
-                            </h1>
+                            <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
+                                {agendaItems.length}
+                            </p>
 
-                            <p className="mt-4 max-w-2xl text-lg leading-8 text-muted">
-                                {agenda.description ||
-                                    "Deze agenda heeft nog geen beschrijving."}
+                            <p className="mt-1 text-sm text-muted">
+                                Gekoppeld aan deze agenda
                             </p>
                         </div>
 
-                        {/* Actions */}
-                        <div className="flex shrink-0 items-center gap-3">
-                            <EditButton
-                                href={`/settings/agendas/${id}/edit`}
-                            />
+                        <div className="rounded-xl border border-border bg-surface px-5 py-4">
+                            <p className="text-xs font-medium uppercase tracking-wide text-muted">
+                                Type
+                            </p>
 
-                            <DeleteButton
-                                onDelete={deleteAgenda}
-                                title={deleteTitle}
-                                description={deleteDescription}
-                            />
+                            <p className="mt-2 text-base font-semibold text-foreground">
+                                Organisatieagenda
+                            </p>
+
+                            <p className="mt-1 text-sm text-muted">
+                                Beschikbaar voor planning en filtering
+                            </p>
                         </div>
                     </div>
                 </section>
 
                 {/* Agenda items */}
-                <section className="mt-16">
-                    <div className="mb-5 flex items-end justify-between gap-6">
-                        <div>
-                            <p className="text-sm font-medium text-muted">
-                                Planning
-                            </p>
+                <section className="mt-12">
+                    <div className="mb-5">
+                        <h2 className="text-xl font-semibold tracking-tight text-foreground">
+                            Agenda items
+                        </h2>
 
-                            <h2 className="mt-1 text-2xl font-semibold tracking-tight text-foreground">
-                                Agenda items
-                            </h2>
-
-                            <p className="mt-2 text-sm text-muted">
-                                Items die aan deze agenda zijn gekoppeld.
-                            </p>
-                        </div>
-
-                        <span className="shrink-0 text-sm text-muted">
-                            {agendaItems.length}{" "}
-                            {agendaItems.length === 1
-                                ? "item"
-                                : "items"}
-                        </span>
+                        <p className="mt-1 text-sm text-muted">
+                            De items die momenteel aan deze agenda
+                            gekoppeld zijn.
+                        </p>
                     </div>
 
                     <AgendaItemList
