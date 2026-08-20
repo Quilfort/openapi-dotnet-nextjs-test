@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const navigation = [
     {
@@ -19,52 +22,91 @@ const navigation = [
 ];
 
 export default function Sidebar() {
+    const pathname = usePathname();
+
     return (
         <aside
             aria-label="Hoofdnavigatie"
-            className="hidden w-64 shrink-0 bg-[#172554] text-white md:flex md:min-h-screen md:flex-col"
+            className="hidden w-64 shrink-0 flex-col border-r md:flex md:min-h-screen"
+            style={{
+                backgroundColor: "var(--sidebar-bg)",
+                color: "var(--sidebar-fg)",
+                borderColor: "var(--sidebar-border)",
+            }}
         >
             {/* Brand */}
-            <div className="border-b border-white/10 px-6 py-6">
+            <div
+                className="border-b px-6 py-6"
+                style={{ borderColor: "var(--sidebar-border)" }}
+            >
                 <Link
                     href="/"
-                    className="block rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#172554]"
+                    className="block rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                    style={{
+                        // @ts-expect-error -- CSS custom property for focus ring color
+                        "--tw-ring-color": "var(--accent-ink)",
+                        "--tw-ring-offset-color": "var(--sidebar-bg)",
+                    }}
                 >
-                    <span className="block text-lg font-semibold tracking-tight">
+                    <span className="flex items-center gap-2 text-lg font-semibold tracking-tight">
+                        <span
+                            aria-hidden="true"
+                            className="h-2.5 w-2.5 rounded-full"
+                            style={{ backgroundColor: "var(--accent)" }}
+                        />
                         Agenda Management
                     </span>
 
-                    <span className="mt-1 block text-sm text-blue-200">
+                    <span
+                        className="mt-1 block text-sm"
+                        style={{ color: "var(--sidebar-muted)" }}
+                    >
                         For your Productivity
                     </span>
                 </Link>
             </div>
 
             {/* Navigation */}
-            <nav
-                aria-label="Hoofdnavigatie"
-                className="flex-1 px-4 py-6"
-            >
+            <nav aria-label="Hoofdnavigatie" className="flex-1 px-4 py-6">
                 <ul className="space-y-1">
-                    {navigation.map((item) => (
-                        <li key={item.name}>
-                            {item.disabled ? (
-                                <span
-                                    aria-disabled="true"
-                                    className="flex cursor-not-allowed items-center rounded-lg px-3 py-2.5 text-sm font-medium text-blue-200/60"
-                                >
-                                    {item.name}
-                                </span>
-                            ) : (
-                                <Link
-                                    href={item.href}
-                                    className="flex items-center rounded-lg px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
-                                >
-                                    {item.name}
-                                </Link>
-                            )}
-                        </li>
-                    ))}
+                    {navigation.map((item) => {
+                        const isActive = pathname === item.href;
+
+                        return (
+                            <li key={item.name}>
+                                {item.disabled ? (
+                                    <span
+                                        aria-disabled="true"
+                                        className="flex cursor-not-allowed items-center rounded-lg px-3 py-2.5 text-sm font-medium opacity-50"
+                                        style={{ color: "var(--sidebar-muted)" }}
+                                    >
+                                        {item.name}
+                                    </span>
+                                ) : (
+                                    <Link
+                                        href={item.href}
+                                        aria-current={isActive ? "page" : undefined}
+                                        className="flex items-center gap-2.5 rounded-lg border-l-2 px-3 py-2.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2"
+                                        style={{
+                                            borderColor: isActive ? "var(--accent-ink)" : "transparent",
+                                            backgroundColor: isActive ? "var(--accent-soft)" : "transparent",
+                                            color: isActive ? "var(--accent-ink)" : "var(--sidebar-fg)",
+                                            // @ts-expect-error -- CSS custom property for focus ring color
+                                            "--tw-ring-color": "var(--accent-ink)",
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            if (!isActive) e.currentTarget.style.backgroundColor = "var(--sidebar-hover)";
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            if (!isActive) e.currentTarget.style.backgroundColor = "transparent";
+                                        }}
+                                    >
+                                        {item.name}
+                                    </Link>
+                                )}
+                            </li>
+                        );
+                    })}
                 </ul>
             </nav>
 
@@ -72,7 +114,14 @@ export default function Sidebar() {
             <div className="px-4 pb-3">
                 <Link
                     href="/settings"
-                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                    className="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2"
+                    style={{
+                        color: "var(--sidebar-fg)",
+                        // @ts-expect-error -- CSS custom property for focus ring color
+                        "--tw-ring-color": "var(--accent-ink)",
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--sidebar-hover)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -80,7 +129,7 @@ export default function Sidebar() {
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="1.8"
-                        className="h-5 w-5 shrink-0"
+                        className="h-5 w-5 shrink-0 transition-colors group-hover:stroke-[color:var(--accent-ink)]"
                         aria-hidden="true"
                     >
                         <path
@@ -100,8 +149,11 @@ export default function Sidebar() {
             </div>
 
             {/* Footer */}
-            <div className="border-t border-white/10 px-6 py-4">
-                <p className="text-xs text-blue-200">
+            <div
+                className="border-t px-6 py-4"
+                style={{ borderColor: "var(--sidebar-border)" }}
+            >
+                <p className="text-xs" style={{ color: "var(--sidebar-muted)" }}>
                     by Quilfort Frederiks
                 </p>
             </div>
