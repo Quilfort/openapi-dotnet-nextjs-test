@@ -55,101 +55,140 @@ export default function AgendaTaskList({
     }
 
     return (
-        <div className="overflow-hidden rounded-2xl border border-border bg-surface">
-            <div className="overflow-x-auto">
-                <table className="w-full min-w-[900px] border-collapse text-left">
-                    <thead>
-                        <tr className="border-b border-border text-sm text-muted">
-                            <th className="px-6 py-4 font-medium">
-                                Taak
-                            </th>
+        <div
+            className="overflow-x-auto rounded-2xl border border-border bg-surface"
+            role="region"
+            aria-labelledby="agenda-task-list-caption"
+            tabIndex={0}
+        >
+            <table className="w-full min-w-[900px] table-fixed border-collapse text-left">
+                <caption
+                    id="agenda-task-list-caption"
+                    className="sr-only"
+                >
+                    Overzicht van agenda taken
+                </caption>
 
-                            <th className="px-6 py-4 font-medium">
-                                Beschrijving
-                            </th>
+                <colgroup>
+                    <col className={showAgendaItem ? "w-[30%]" : "w-[38%]"} />
 
-                            <th className="px-6 py-4 font-medium">
-                                Deadline
-                            </th>
+                    <col className="w-[120px]" />
 
-                            {showAgendaItem && (
-                                <th className="px-6 py-4 font-medium">
-                                    Agenda item
-                                </th>
-                            )}
+                    {showAgendaItem && (
+                        <col className="w-[24%]" />
+                    )}
 
-                            <th className="px-6 py-4 font-medium">
-                                Afdeling
-                            </th>
+                    <col className="w-[20%]" />
 
-                            <th className="px-6 py-4 font-medium">
-                                Medewerker
-                            </th>
-                        </tr>
-                    </thead>
+                    <col className="w-[20%]" />
+                </colgroup>
 
-                    <tbody>
-                        {sortedAgendaTasks.map((agendaTask) => (
-                            <tr
-                                key={agendaTask.id}
-                                className="border-b border-border last:border-b-0 transition-colors hover:bg-background"
+                <thead>
+                    <tr className="border-b border-border text-xs font-medium uppercase tracking-wide text-muted">
+                        <th
+                            scope="col"
+                            className="px-5 py-3 font-medium"
+                        >
+                            Taak
+                        </th>
+
+                        <th
+                            scope="col"
+                            className="px-5 py-3 font-medium"
+                        >
+                            Deadline
+                        </th>
+
+                        {showAgendaItem && (
+                            <th
+                                scope="col"
+                                className="px-5 py-3 font-medium"
                             >
-                                {/* Taak */}
-                                <td className="px-6 py-5">
-                                    <Link
-                                        href={`/agenda-tasks/${agendaTask.id}`}
-                                        className="font-medium text-foreground hover:underline"
+                                Agenda item
+                            </th>
+                        )}
+
+                        <th
+                            scope="col"
+                            className="px-5 py-3 font-medium"
+                        >
+                            Afdeling
+                        </th>
+
+                        <th
+                            scope="col"
+                            className="px-5 py-3 font-medium"
+                        >
+                            Medewerker
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody className="divide-y divide-border">
+                    {sortedAgendaTasks.map((agendaTask) => (
+                        <tr
+                            key={agendaTask.id}
+                            className="group transition-colors hover:bg-background"
+                        >
+                            {/* Taak */}
+                            <th
+                                scope="row"
+                                className="px-5 py-3.5 font-normal"
+                            >
+                                <Link
+                                    href={`/agenda-tasks/${agendaTask.id}`}
+                                    className="block min-w-0 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                                >
+                                    <span
+                                        title={
+                                            agendaTask.name ||
+                                            "Naamloze taak"
+                                        }
+                                        className="block line-clamp-2 font-medium text-foreground group-hover:text-accent"
                                     >
                                         {agendaTask.name ||
                                             "Naamloze taak"}
-                                    </Link>
-                                </td>
-
-                                {/* Beschrijving */}
-                                <td className="max-w-md px-6 py-5">
-                                    <span className="line-clamp-2 text-sm text-muted">
-                                        {agendaTask.description || "—"}
                                     </span>
-                                </td>
 
-                                {/* Deadline */}
-                                <td className="whitespace-nowrap px-6 py-5 text-sm text-foreground">
-                                    {formatDeadline(
-                                        agendaTask.deadlineDate
+                                    {agendaTask.description && (
+                                        <span
+                                            title={
+                                                agendaTask.description
+                                            }
+                                            className="mt-0.5 block truncate text-xs text-muted"
+                                        >
+                                            {agendaTask.description}
+                                        </span>
                                     )}
-                                </td>
+                                </Link>
+                            </th>
 
-                                {/* Agenda item */}
-                                {showAgendaItem && (
-                                    <td className="px-6 py-5">
-                                        {agendaTask.agendaItem ? (
-                                            <Link
-                                                href={`/agenda-items/${agendaTask.agendaItem.id}`}
-                                                className="text-sm font-medium text-foreground hover:underline"
-                                            >
-                                                {
-                                                    agendaTask
-                                                        .agendaItem
-                                                        .name
-                                                }
-                                            </Link>
-                                        ) : (
-                                            <span className="text-sm text-muted">
-                                                Onbekend agenda item
-                                            </span>
-                                        )}
-                                    </td>
+                            {/* Deadline */}
+                            <td className="whitespace-nowrap px-5 py-3.5 text-sm text-foreground">
+                                {formatDeadline(
+                                    agendaTask.deadlineDate
                                 )}
+                            </td>
 
-                                {/* Afdeling */}
-                                <td className="px-6 py-5">
-                                    {agendaTask.department ? (
+                            {/* Agenda item */}
+                            {showAgendaItem && (
+                                <td className="px-5 py-3.5">
+                                    {agendaTask.agendaItem ? (
                                         <Link
-                                            href={`/settings/departments/${agendaTask.department.id}`}
-                                            className="text-sm font-medium text-foreground hover:underline"
+                                            href={`/agenda-items/${agendaTask.agendaItem.id}`}
+                                            title={
+                                                agendaTask
+                                                    .agendaItem
+                                                    .name ||
+                                                "Naamloos agenda item"
+                                            }
+                                            className="block truncate text-sm text-foreground hover:text-accent hover:underline"
                                         >
-                                            {agendaTask.department.name ||
-                                                "Naamloze afdeling"}
+                                            {
+                                                agendaTask
+                                                    .agendaItem
+                                                    .name
+                                            }
                                         </Link>
                                     ) : (
                                         <span className="text-sm text-muted">
@@ -157,28 +196,53 @@ export default function AgendaTaskList({
                                         </span>
                                     )}
                                 </td>
+                            )}
 
-                                {/* Medewerker */}
-                                <td className="px-6 py-5">
-                                    {agendaTask.user ? (
-                                        <Link
-                                            href={`/settings/users/${agendaTask.user.id}`}
-                                            className="text-sm font-medium text-foreground hover:underline"
-                                        >
-                                            {agendaTask.user.name ||
-                                                "Naamloze medewerker"}
-                                        </Link>
-                                    ) : (
-                                        <span className="text-sm text-muted">
-                                            —
-                                        </span>
-                                    )}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                            {/* Afdeling */}
+                            <td className="px-5 py-3.5">
+                                {agendaTask.department ? (
+                                    <Link
+                                        href={`/settings/departments/${agendaTask.department.id}`}
+                                        title={
+                                            agendaTask.department.name ||
+                                            "Naamloze afdeling"
+                                        }
+                                        className="block truncate text-sm text-foreground hover:text-accent hover:underline"
+                                    >
+                                        {agendaTask.department.name ||
+                                            "Naamloze afdeling"}
+                                    </Link>
+                                ) : (
+                                    <span className="text-sm text-muted">
+                                        —
+                                    </span>
+                                )}
+                            </td>
+
+                            {/* Medewerker */}
+                            <td className="px-5 py-3.5">
+                                {agendaTask.user ? (
+                                    <Link
+                                        href={`/settings/users/${agendaTask.user.id}`}
+                                        title={
+                                            agendaTask.user.name ||
+                                            "Naamloze medewerker"
+                                        }
+                                        className="block truncate text-sm text-foreground hover:text-accent hover:underline"
+                                    >
+                                        {agendaTask.user.name ||
+                                            "Naamloze medewerker"}
+                                    </Link>
+                                ) : (
+                                    <span className="text-sm text-muted">
+                                        —
+                                    </span>
+                                )}
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 }

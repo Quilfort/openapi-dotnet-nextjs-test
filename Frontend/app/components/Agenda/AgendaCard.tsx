@@ -13,7 +13,7 @@ export default function AgendaCard({
 }: AgendaCardProps) {
   return (
     <Link
-      href={`/agendas/${agenda.id}`}
+      href={`/settings/agendas/${agenda.id}`}
       className="group block px-6 py-5 transition-colors hover:bg-background focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-inset"
     >
       <div className="flex items-center justify-between gap-6">

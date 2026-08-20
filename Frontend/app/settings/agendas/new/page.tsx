@@ -25,7 +25,7 @@ export default function NewAgendaPage() {
             throw new Error("De agenda kon niet worden aangemaakt.");
         }
 
-        redirect(`/agendas/${response.data.id}`);
+        redirect(`/settings/agendas/${response.data.id}`);
     }
 
     return (
@@ -41,7 +41,7 @@ export default function NewAgendaPage() {
                     </Link>
 
                     <Link
-                        href="/agendas"
+                        href="/settings/agendas"
                         className="text-sm font-medium text-muted transition-colors hover:text-foreground"
                     >
                         ← Agendas
