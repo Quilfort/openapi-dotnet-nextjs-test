@@ -78,12 +78,16 @@ export default async function AgendaTasksPage({
         params.user ?? "";
 
     /*
+     * --------------------------------------------------
      * Filteropties
+     * --------------------------------------------------
      *
-     * We halen de opties uit de taken die al zijn
-     * opgehaald. Hierdoor zijn geen extra API-calls
-     * nodig.
+     * We bouwen de opties op basis van de data die
+     * al door de API is opgehaald.
+     *
+     * Hierdoor zijn geen extra API-calls nodig.
      */
+
     const agendaItems = createFilterOptions(
         agendaTasks.map(
             (agendaTask) => agendaTask.agendaItem
@@ -106,11 +110,10 @@ export default async function AgendaTasksPage({
     );
 
     /*
-     * "Niet toegewezen" is een speciale optie.
+     * "Niet toegewezen" is geen echte medewerker.
      *
-     * Dit is geen echte user ID, maar een waarde
-     * waarmee we specifiek kunnen zoeken naar taken
-     * zonder gekoppelde medewerker.
+     * Het is een speciale filterwaarde waarmee we
+     * taken zonder gekoppelde medewerker kunnen vinden.
      */
     users.unshift({
         id: UNASSIGNED_VALUE,
@@ -118,57 +121,73 @@ export default async function AgendaTasksPage({
     });
 
     /*
-     * Filter de taken.
+     * --------------------------------------------------
+     * Filter de taken
+     * --------------------------------------------------
      */
+
     const filteredAgendaTasks =
         agendaTasks.filter((agendaTask) => {
             /*
              * Agenda item
              */
-            if (
-                selectedAgendaItem &&
-                agendaTask.agendaItemId !==
+            if (selectedAgendaItem) {
+                if (
+                    agendaTask.agendaItemId !==
                     selectedAgendaItem
-            ) {
-                return false;
+                ) {
+                    return false;
+                }
             }
 
             /*
              * Afdeling
              */
-            if (
-                selectedDepartment &&
-                agendaTask.departmentId !==
+            if (selectedDepartment) {
+                if (
+                    agendaTask.departmentId !==
                     selectedDepartment
-            ) {
-                return false;
+                ) {
+                    return false;
+                }
             }
 
             /*
              * Medewerker
-             *
-             * Belangrijk:
-             * "Niet toegewezen" kijkt ALLEEN naar de
-             * gekoppelde medewerker.
-             *
-             * Een taak mag dus bijvoorbeeld wel een
-             * afdeling hebben en toch "Niet toegewezen"
-             * zijn.
              */
             if (selectedUser) {
+                /*
+                 * Speciale optie:
+                 *
+                 * "Niet toegewezen" betekent dat er
+                 * helemaal geen user gekoppeld is.
+                 *
+                 * We controleren hier bewust de relation
+                 * (agendaTask.user) in plaats van alleen
+                 * userId.
+                 */
                 if (
                     selectedUser ===
                     UNASSIGNED_VALUE
                 ) {
-                    return !agendaTask.user;
+                    return agendaTask.user == null;
                 }
 
+                /*
+                 * Normale medewerker-filter.
+                 *
+                 * Hier verwachten we een echte user ID
+                 * uit de select.
+                 */
                 return (
                     agendaTask.userId ===
-                    null
+                    selectedUser
                 );
             }
 
+            /*
+             * Geen user-filter actief.
+             */
             return true;
         });
 
