@@ -34,7 +34,7 @@ export default async function EditAgendaPage({
 
     await putApiAgendasId(id, updatedAgenda);
 
-    redirect(`/agendas/${id}`);
+    redirect(`/settings/agendas/${id}`);
   }
 
   return (
@@ -50,7 +50,7 @@ export default async function EditAgendaPage({
           </Link>
 
           <Link
-            href={`/agendas/${id}`}
+            href={`/settings/agendas/${id}`}
             className="text-sm font-medium text-muted transition-colors hover:text-foreground"
           >
             ← Agenda bekijken

@@ -29,7 +29,7 @@ export default async function AgendasPage() {
               description="Bekijk en beheer de agenda's binnen Agenda Management."
             />
 
-            <CreateButton href="/agendas/new">
+            <CreateButton href="/settings/agendas/new">
               Nieuwe agenda
             </CreateButton>
           </div>
@@ -65,7 +65,7 @@ export default async function AgendasPage() {
               </p>
 
               <div className="mt-6">
-                <CreateButton href="/agendas/new">
+                <CreateButton href="/settings/agendas/new">
                   Eerste agenda maken
                 </CreateButton>
               </div>

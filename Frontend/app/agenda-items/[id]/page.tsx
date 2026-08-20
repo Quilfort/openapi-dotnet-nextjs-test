@@ -124,7 +124,7 @@ export default async function AgendaItemPage({
 
         if (agendaItem.agendaId) {
             revalidatePath(
-                `/agendas/${agendaItem.agendaId}`
+                `/settings/agendas/${agendaItem.agendaId}`
             );
         }
 
@@ -220,7 +220,7 @@ export default async function AgendaItemPage({
                                 <dd className="text-sm text-foreground sm:col-span-2">
                                     {agendaItem.agenda ? (
                                         <Link
-                                            href={`/agendas/${agendaItem.agenda.id}`}
+                                            href={`/settings/agendas/${agendaItem.agenda.id}`}
                                             className="font-medium hover:underline"
                                         >
                                             {agendaItem.agenda.name}

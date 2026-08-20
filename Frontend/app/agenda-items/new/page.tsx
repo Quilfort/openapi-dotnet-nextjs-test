@@ -97,7 +97,7 @@ export default async function NewAgendaItemPage() {
                             </p>
 
                             <Link
-                                href="/agendas/new"
+                                href="/settings/agendas/new"
                                 className="mt-6 inline-flex rounded-xl bg-foreground px-5 py-3 text-sm font-medium text-background transition-opacity hover:opacity-80"
                             >
                                 Nieuwe agenda maken

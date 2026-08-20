@@ -70,10 +70,10 @@ export default async function AgendaPage({
             );
         }
 
-        revalidatePath("/agendas");
-        revalidatePath("/agenda-items");
+        revalidatePath("/settings/agendas");
+        revalidatePath("/settings/agenda-items");
 
-        redirect("/agendas");
+        redirect("/settings/agendas");
     }
 
     return (
@@ -82,7 +82,7 @@ export default async function AgendaPage({
 
                 {/* Back navigation */}
                 <Link
-                    href="/agendas"
+                    href="/settings/agendas"
                     className="inline-flex min-h-10 items-center text-sm font-medium text-muted transition-colors hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
                 >
                     ← Alle agenda&apos;s
@@ -109,7 +109,7 @@ export default async function AgendaPage({
                         {/* Actions */}
                         <div className="flex shrink-0 items-center gap-3">
                             <EditButton
-                                href={`/agendas/${id}/edit`}
+                                href={`/settings/agendas/${id}/edit`}
                             />
 
                             <DeleteButton
