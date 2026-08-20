@@ -7,6 +7,10 @@
   --border: #e2e8f0;
   --surface: #ffffff;
   --accent: #2563eb;
+
+  /* Brand / OR-blue accent — gebruikt op donkere ondergrond (5.8:1 contrast, WCAG AA+) */
+  --or-blue: #00aeef;
+  --or-blue-soft: rgb(0 174 239 / 0.14); /* voor actieve item-achtergrond */
 }
 
 @theme inline {
@@ -16,6 +20,8 @@
   --color-border: var(--border);
   --color-surface: var(--surface);
   --color-accent: var(--accent);
+  --color-or-blue: var(--or-blue);
+  --color-or-blue-soft: var(--or-blue-soft);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);

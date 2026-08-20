@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const navigation = [
     {
@@ -19,6 +22,8 @@ const navigation = [
 ];
 
 export default function Sidebar() {
+    const pathname = usePathname();
+
     return (
         <aside
             aria-label="Hoofdnavigatie"
@@ -28,9 +33,13 @@ export default function Sidebar() {
             <div className="border-b border-white/10 px-6 py-6">
                 <Link
                     href="/"
-                    className="block rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#172554]"
+                    className="block rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--or-blue)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#172554]"
                 >
-                    <span className="block text-lg font-semibold tracking-tight">
+                    <span className="flex items-center gap-2 text-lg font-semibold tracking-tight">
+                        <span
+                            aria-hidden="true"
+                            className="h-2 w-2 rounded-full bg-[color:var(--or-blue)]"
+                        />
                         Agenda Management
                     </span>
 
@@ -46,25 +55,34 @@ export default function Sidebar() {
                 className="flex-1 px-4 py-6"
             >
                 <ul className="space-y-1">
-                    {navigation.map((item) => (
-                        <li key={item.name}>
-                            {item.disabled ? (
-                                <span
-                                    aria-disabled="true"
-                                    className="flex cursor-not-allowed items-center rounded-lg px-3 py-2.5 text-sm font-medium text-blue-200/60"
-                                >
-                                    {item.name}
-                                </span>
-                            ) : (
-                                <Link
-                                    href={item.href}
-                                    className="flex items-center rounded-lg px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
-                                >
-                                    {item.name}
-                                </Link>
-                            )}
-                        </li>
-                    ))}
+                    {navigation.map((item) => {
+                        const isActive = pathname === item.href;
+
+                        return (
+                            <li key={item.name}>
+                                {item.disabled ? (
+                                    <span
+                                        aria-disabled="true"
+                                        className="flex cursor-not-allowed items-center rounded-lg px-3 py-2.5 text-sm font-medium text-blue-200/60"
+                                    >
+                                        {item.name}
+                                    </span>
+                                ) : (
+                                    <Link
+                                        href={item.href}
+                                        aria-current={isActive ? "page" : undefined}
+                                        className={`flex items-center gap-2.5 rounded-lg border-l-2 px-3 py-2.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--or-blue)] ${
+                                            isActive
+                                                ? "border-[color:var(--or-blue)] bg-[color:var(--or-blue-soft)] text-white"
+                                                : "border-transparent text-white hover:border-[color:var(--or-blue)]/50 hover:bg-white/10"
+                                        }`}
+                                    >
+                                        {item.name}
+                                    </Link>
+                                )}
+                            </li>
+                        );
+                    })}
                 </ul>
             </nav>
 
@@ -72,7 +90,7 @@ export default function Sidebar() {
             <div className="px-4 pb-3">
                 <Link
                     href="/settings"
-                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--or-blue)]"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -80,7 +98,7 @@ export default function Sidebar() {
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="1.8"
-                        className="h-5 w-5 shrink-0"
+                        className="h-5 w-5 shrink-0 transition-colors group-hover:stroke-[color:var(--or-blue)]"
                         aria-hidden="true"
                     >
                         <path
