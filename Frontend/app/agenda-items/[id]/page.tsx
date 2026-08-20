@@ -10,6 +10,7 @@ import {
 
 import EditButton from "@/app/components/EditButton";
 import DeleteButton from "@/app/components/DeleteButton";
+import CreateButton from "@/app/components/CreateButton";
 import AgendaTaskList from "@/app/components/AgendaTask/AgendaTaskList";
 
 function formatDateRange(
@@ -73,11 +74,13 @@ export default async function AgendaItemPage({
 }: AgendaItemPageProps) {
     const { id } = await params;
 
-    const [agendaItemResponse, agendaTasksResponse] =
-        await Promise.all([
-            getApiAgendaItemsId(id),
-            getApiAgendaTasks(),
-        ]);
+    const [
+        agendaItemResponse,
+        agendaTasksResponse,
+    ] = await Promise.all([
+        getApiAgendaItemsId(id),
+        getApiAgendaTasks(),
+    ]);
 
     if (agendaItemResponse.status !== 200) {
         notFound();
@@ -91,22 +94,17 @@ export default async function AgendaItemPage({
 
     const agendaItem = agendaItemResponse.data;
 
-    /*
-     * AgendaTaskList werkt met de DTO's die rechtstreeks
-     * uit de generated API komen.
-     *
-     * We hoeven hier dus geen AgendaTask te construeren.
-     * We filteren alleen op het huidige agenda item.
-     */
-    const agendaTasks = agendaTasksResponse.data.filter(
-        (agendaTask) =>
-            agendaTask.agendaItemId === id
-    );
+    const agendaTasks =
+        agendaTasksResponse.data.filter(
+            (agendaTask) =>
+                agendaTask.agendaItemId === id
+        );
 
     async function deleteAgendaItem() {
         "use server";
 
-        const response = await deleteApiAgendaItemsId(id);
+        const response =
+            await deleteApiAgendaItemsId(id);
 
         if (response.status !== 204) {
             throw new Error(
@@ -114,10 +112,6 @@ export default async function AgendaItemPage({
             );
         }
 
-        /*
-         * De verschillende pagina's die afhankelijk zijn
-         * van agenda items/taken opnieuw laten ophalen.
-         */
         revalidatePath("/");
         revalidatePath("/agenda-items");
         revalidatePath("/agenda-tasks");
@@ -167,7 +161,9 @@ export default async function AgendaItemPage({
 
                             {agendaItem.description && (
                                 <p className="mt-6 max-w-3xl text-lg leading-8 text-muted">
-                                    {agendaItem.description}
+                                    {
+                                        agendaItem.description
+                                    }
                                 </p>
                             )}
                         </div>
@@ -178,7 +174,9 @@ export default async function AgendaItemPage({
                             />
 
                             <DeleteButton
-                                onDelete={deleteAgendaItem}
+                                onDelete={
+                                    deleteAgendaItem
+                                }
                             />
                         </div>
                     </div>
@@ -223,7 +221,11 @@ export default async function AgendaItemPage({
                                             href={`/settings/agendas/${agendaItem.agenda.id}`}
                                             className="font-medium hover:underline"
                                         >
-                                            {agendaItem.agenda.name}
+                                            {
+                                                agendaItem
+                                                    .agenda
+                                                    .name
+                                            }
                                         </Link>
                                     ) : (
                                         <span className="text-muted">
@@ -237,7 +239,7 @@ export default async function AgendaItemPage({
 
                     {/* Tasks */}
                     <section className="mt-16">
-                        <div className="mb-5 flex items-end justify-between gap-6">
+                        <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                             <div>
                                 <p className="text-sm font-medium text-muted">
                                     Taken
@@ -248,16 +250,28 @@ export default async function AgendaItemPage({
                                 </h2>
 
                                 <p className="mt-2 text-sm text-muted">
-                                    Taken die aan dit agenda item zijn gekoppeld.
+                                    Taken die aan dit agenda item
+                                    zijn gekoppeld.
                                 </p>
                             </div>
 
-                            <span className="shrink-0 text-sm text-muted">
-                                {agendaTasks.length}{" "}
-                                {agendaTasks.length === 1
-                                    ? "taak"
-                                    : "taken"}
-                            </span>
+                            <div className="flex shrink-0 items-center gap-4">
+                                <span className="text-sm text-muted">
+                                    {agendaTasks.length}{" "}
+                                    {agendaTasks.length ===
+                                    1
+                                        ? "taak"
+                                        : "taken"}
+                                </span>
+
+                                <CreateButton
+                                    href={`/agenda-tasks/new?agendaItemId=${encodeURIComponent(
+                                        id
+                                    )}`}
+                                >
+                                    Nieuwe taak
+                                </CreateButton>
+                            </div>
                         </div>
 
                         <AgendaTaskList

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import {
     getApiAgendas,
@@ -13,7 +13,20 @@ import type { AgendaTask } from "@/generated/models";
 
 import AgendaTaskForm from "@/app/components/AgendaTask/AgendaTaskForm";
 
-export default async function NewAgendaTaskPage() {
+type NewAgendaTaskPageProps = {
+    searchParams: Promise<{
+        agendaItemId?: string;
+    }>;
+};
+
+export default async function NewAgendaTaskPage({
+    searchParams,
+}: NewAgendaTaskPageProps) {
+    const params = await searchParams;
+
+    const agendaItemId =
+        params.agendaItemId ?? "";
+
     const [
         agendasResponse,
         agendaItemsResponse,
@@ -95,6 +108,32 @@ export default async function NewAgendaTaskPage() {
             )
     );
 
+    /*
+     * Contextual create
+     *
+     * When an agenda item ID is supplied, make sure
+     * that the agenda item actually exists.
+     */
+    let contextAgendaId: string | undefined;
+    let contextAgendaItemName: string | undefined;
+
+    if (agendaItemId) {
+        const agendaItem = agendaItems.find(
+            (item) => item.id === agendaItemId
+        );
+
+        if (!agendaItem) {
+            notFound();
+        }
+
+        contextAgendaId =
+            agendaItem.agendaId ?? undefined;
+
+        contextAgendaItemName =
+            agendaItem.name ??
+            "Naamloos agenda item";
+    }
+
     async function createAgendaTask(
         agendaTask: AgendaTask
     ) {
@@ -120,6 +159,10 @@ export default async function NewAgendaTaskPage() {
         );
     }
 
+    const isContextualCreate = Boolean(
+        agendaItemId
+    );
+
     return (
         <main className="min-h-screen">
             <div className="mx-auto max-w-6xl px-6 py-8 sm:px-8 lg:px-12">
@@ -132,27 +175,47 @@ export default async function NewAgendaTaskPage() {
                     </Link>
 
                     <Link
-                        href="/agenda-tasks"
+                        href={
+                            isContextualCreate
+                                ? `/agenda-items/${agendaItemId}`
+                                : "/agenda-tasks"
+                        }
                         className="text-sm font-medium text-muted transition-colors hover:text-foreground"
                     >
-                        ← Taken
+                        {isContextualCreate
+                            ? "← Agenda item"
+                            : "← Taken"}
                     </Link>
                 </header>
 
                 <section className="py-16">
                     <div className="mb-10 max-w-3xl">
                         <p className="mb-3 text-sm font-medium text-muted">
-                            Nieuwe taak
+                            {isContextualCreate
+                                ? "Taak toevoegen"
+                                : "Nieuwe taak"}
                         </p>
 
                         <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-                            Taak aanmaken
+                            {isContextualCreate
+                                ? "Nieuwe taak"
+                                : "Taak aanmaken"}
                         </h1>
 
-                        <p className="mt-4 text-lg leading-8 text-muted">
-                            Maak een nieuwe taak aan en koppel deze
-                            aan een agenda item.
-                        </p>
+                        {isContextualCreate ? (
+                            <p className="mt-4 text-lg leading-8 text-muted">
+                                Maak een taak aan voor{" "}
+                                <span className="font-medium text-foreground">
+                                    {contextAgendaItemName}
+                                </span>
+                                .
+                            </p>
+                        ) : (
+                            <p className="mt-4 text-lg leading-8 text-muted">
+                                Maak een nieuwe taak aan en
+                                koppel deze aan een agenda item.
+                            </p>
+                        )}
                     </div>
 
                     <AgendaTaskForm
@@ -160,6 +223,15 @@ export default async function NewAgendaTaskPage() {
                         agendaItems={agendaItems}
                         departments={departments}
                         users={users}
+                        initialAgendaId={
+                            contextAgendaId
+                        }
+                        initialAgendaItemId={
+                            agendaItemId || undefined
+                        }
+                        lockRelations={
+                            isContextualCreate
+                        }
                         onSubmit={createAgendaTask}
                         submitLabel="Taak aanmaken"
                     />

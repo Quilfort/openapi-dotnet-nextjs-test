@@ -17,6 +17,19 @@ type AgendaTaskFormProps = {
     departments: DepartmentDto[];
     users: UserDto[];
     initialData?: AgendaTaskDto;
+
+    /**
+     * Used when creating a task from an agenda item.
+     */
+    initialAgendaId?: string;
+    initialAgendaItemId?: string;
+
+    /**
+     * Prevent changing the agenda / agenda item
+     * when the form is opened from an agenda item.
+     */
+    lockRelations?: boolean;
+
     onSubmit: (agendaTask: AgendaTask) => Promise<void>;
     submitLabel?: string;
 };
@@ -27,15 +40,22 @@ export default function AgendaTaskForm({
     departments,
     users,
     initialData,
+    initialAgendaId,
+    initialAgendaItemId,
+    lockRelations = false,
     onSubmit,
     submitLabel = "Taak aanmaken",
 }: AgendaTaskFormProps) {
     const [agendaId, setAgendaId] = useState(
-        initialData?.agendaItem?.agendaId ?? ""
+        initialData?.agendaItem?.agendaId ??
+            initialAgendaId ??
+            ""
     );
 
     const [agendaItemId, setAgendaItemId] = useState(
-        initialData?.agendaItemId ?? ""
+        initialData?.agendaItemId ??
+            initialAgendaItemId ??
+            ""
     );
 
     const [name, setName] = useState(
@@ -113,8 +133,8 @@ export default function AgendaTaskForm({
         const agendaTask: AgendaTask = {
             ...(initialData?.id
                 ? {
-                    id: initialData.id,
-                }
+                      id: initialData.id,
+                  }
                 : {}),
             name: trimmedName,
             description: description.trim() || null,
@@ -155,8 +175,9 @@ export default function AgendaTaskForm({
                     </h2>
 
                     <p className="mt-1 text-sm text-muted">
-                        Kies de agenda en het agenda item
-                        waaraan deze taak gekoppeld wordt.
+                        {lockRelations
+                            ? "Deze taak wordt automatisch gekoppeld aan het huidige agenda item."
+                            : "Kies de agenda en het agenda item waaraan deze taak gekoppeld wordt."}
                     </p>
                 </div>
 
@@ -178,7 +199,8 @@ export default function AgendaTaskForm({
                                     event.target.value
                                 )
                             }
-                            className="mt-2 w-full rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+                            disabled={lockRelations}
+                            className="mt-2 w-full rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:bg-background disabled:opacity-70"
                             required
                         >
                             <option value="">
@@ -213,16 +235,20 @@ export default function AgendaTaskForm({
                                     event.target.value
                                 )
                             }
-                            disabled={!agendaId}
-                            className="mt-2 w-full rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:opacity-50"
+                            disabled={
+                                !agendaId ||
+                                lockRelations
+                            }
+                            className="mt-2 w-full rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:bg-background disabled:opacity-70"
                             required
                         >
                             <option value="">
                                 {!agendaId
                                     ? "Selecteer eerst een agenda"
-                                    : filteredAgendaItems.length === 0
-                                        ? "Geen agenda items"
-                                        : "Selecteer een agenda item"}
+                                    : filteredAgendaItems.length ===
+                                        0
+                                      ? "Geen agenda items"
+                                      : "Selecteer een agenda item"}
                             </option>
 
                             {filteredAgendaItems.map(
@@ -238,6 +264,13 @@ export default function AgendaTaskForm({
                         </select>
                     </div>
                 </div>
+
+                {lockRelations && (
+                    <p className="mt-4 text-xs text-muted">
+                        De koppeling is bepaald door het agenda item
+                        van waaruit je deze taak aanmaakt.
+                    </p>
+                )}
             </div>
 
             {/* Task */}
@@ -267,7 +300,9 @@ export default function AgendaTaskForm({
                             type="text"
                             value={name}
                             onChange={(event) =>
-                                setName(event.target.value)
+                                setName(
+                                    event.target.value
+                                )
                             }
                             placeholder="Bijvoorbeeld: Presentatie voorbereiden"
                             required
@@ -344,14 +379,16 @@ export default function AgendaTaskForm({
                                 Geen afdeling
                             </option>
 
-                            {departments.map((department) => (
-                                <option
-                                    key={department.id}
-                                    value={department.id}
-                                >
-                                    {department.name}
-                                </option>
-                            ))}
+                            {departments.map(
+                                (department) => (
+                                    <option
+                                        key={department.id}
+                                        value={department.id}
+                                    >
+                                        {department.name}
+                                    </option>
+                                )
+                            )}
                         </select>
                     </div>
 
