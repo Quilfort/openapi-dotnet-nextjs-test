@@ -1,16 +1,24 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
+  --background: #f4f8fb;
   --foreground: #0f172a;
   --muted: #64748b;
   --border: #e2e8f0;
   --surface: #ffffff;
-  --accent: #2563eb;
 
-  /* Brand / OR-blue accent — gebruikt op donkere ondergrond (5.8:1 contrast, WCAG AA+) */
-  --or-blue: #00aeef;
-  --or-blue-soft: rgb(0 174 239 / 0.14); /* voor actieve item-achtergrond */
+  /* OR-blue merkkleur, opgesplitst per rol (zie uitleg) */
+  --accent: #00aeef;                       /* vlakken: badges, knoppen, decoratie */
+  --accent-ink: #0077a3;                   /* tekst/iconen/links/focus op licht — 5:1 AA */
+  --accent-soft: rgb(0 174 239 / 0.12);    /* subtiele hover/actieve tint */
+  --accent-foreground: #062a3a;            /* donkere tekst bovenop --accent vlak — 7:1 */
+
+  /* Sidebar-specifieke tokens */
+  --sidebar-bg: #ffffff;
+  --sidebar-fg: #0f172a;
+  --sidebar-muted: #64748b;
+  --sidebar-border: #e2e8f0;
+  --sidebar-hover: #f1f5f9;
 }
 
 @theme inline {
@@ -20,8 +28,14 @@
   --color-border: var(--border);
   --color-surface: var(--surface);
   --color-accent: var(--accent);
-  --color-or-blue: var(--or-blue);
-  --color-or-blue-soft: var(--or-blue-soft);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-sidebar-bg: var(--sidebar-bg);
+  --color-sidebar-fg: var(--sidebar-fg);
+  --color-sidebar-muted: var(--sidebar-muted);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-hover: var(--sidebar-hover);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -34,7 +48,17 @@
     --muted: #94a3b8;
     --border: #1e293b;
     --surface: #111827;
-    --accent: #60a5fa;
+
+    --accent: #00aeef;
+    --accent-ink: #38c6ff;                 /* lichtere variant nodig voor contrast op donker */
+    --accent-soft: rgb(0 174 239 / 0.16);
+    --accent-foreground: #062a3a;
+
+    --sidebar-bg: #172554;
+    --sidebar-fg: #f8fafc;
+    --sidebar-muted: #93c5fd;
+    --sidebar-border: rgb(255 255 255 / 0.1);
+    --sidebar-hover: rgb(255 255 255 / 0.1);
   }
 }
 
